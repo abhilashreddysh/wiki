@@ -91,6 +91,7 @@ const config = {
           //   label: "Tutorial",
           // },
           // { to: "/blog", label: "Blog", position: "left" },
+          { to: "/to-do", label: "To-Do", position: "left" },
           {
             href: "https://github.com/abhilashreddysh",
             label: "GitHub",
