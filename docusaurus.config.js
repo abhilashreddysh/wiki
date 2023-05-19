@@ -42,7 +42,7 @@ const config = {
           routeBasePath: "/",
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: "https://github.com/abhilashreddysh/wiki",
+          editUrl: "https://github.com/abhilashreddysh/wiki/blob/main",
         },
         blog: false,
         // {
@@ -58,26 +58,11 @@ const config = {
       }),
     ],
   ],
-  themes: [
-    // ... Your other themes.
-    [
-      // @ts-ignore
-      require.resolve("@easyops-cn/docusaurus-search-local"),
-      /** @type {import("@easyops-cn/docusaurus-search-local").PluginOptions} */
-      // @ts-ignore
-      ({
-        // `hashed` is recommended as long-term-cache of index file is possible.
-        hashed: true,
-        language: ["en"],
-        highlightSearchTermsOnTargetPage: true,
-        explicitSearchResultPath: true,
-      }),
-    ],
-  ],
+
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      metadata: [{ name: "keywords", content: "abhi,wiki,docs,documentation" }],
+      metadata: [{ name: "keywords", content: "abhi,wiki,docs,wiki" }],
       // Replace with your project's social card
       image: "img/logo.png",
       announcementBar: {
@@ -111,10 +96,6 @@ const config = {
             label: "GitHub",
             position: "right",
             className: "header-github-link",
-          },
-          {
-            type: "search",
-            position: "left",
           },
         ],
         hideOnScroll: true,
@@ -165,7 +146,7 @@ const config = {
               // },
               {
                 label: "GitHub Repository",
-                href: "https://github.com/abhilashreddysh/documentation",
+                href: "https://github.com/abhilashreddysh/wiki",
               },
             ],
           },
