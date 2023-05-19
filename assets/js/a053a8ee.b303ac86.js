@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwiki=self.webpackChunkwiki||[]).push([[609],{4789:i=>{i.exports=JSON.parse('{"title":"Linux","slug":"/category/linux","permalink":"/wiki/category/linux","navigation":{"previous":{"title":"Home","permalink":"/wiki/"},"next":{"title":"Linux File Permissions","permalink":"/wiki/linux/linux-file-permissions"}}}')}}]);

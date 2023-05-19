@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwiki=self.webpackChunkwiki||[]).push([[933],{9722:i=>{i.exports=JSON.parse('{"title":"Tools","slug":"/category/tools","permalink":"/wiki/category/tools","navigation":{"previous":{"title":"Linux File Permissions","permalink":"/wiki/linux/linux-file-permissions"},"next":{"title":"CronTab","permalink":"/wiki/linux/tools/crontab"}}}')}}]);
