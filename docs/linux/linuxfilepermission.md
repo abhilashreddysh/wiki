@@ -79,6 +79,7 @@ Each set of three characters consists of the following:
 - The second character represents `write` permission.
 - The third character represents `execute` permission.
 
+:::tip
 To view the permissions of a file or folder in Linux, you can use the `ls -l` command. For instance, to view the permissions of a file called file.txt, you can use the following command:
 
 ```shell
@@ -87,6 +88,7 @@ ls -l file.txt
 ```
 
 In this output, the **first column** represents the **permissions of the file**, the **second column** represents the **number of hard links** to the file, the **third and fourth columns** represent the **owner and group** of the file, the **fifth column** represents the **size** of the file.
+:::
 
 ### File Types
 
@@ -123,6 +125,7 @@ For example, if the permission string is `rwxr-xr--`, the permission number woul
 
 Therefore, the number representation for this file permission would be `754`.
 
+:::info
 You can use the following numbers to represent permissions:
 
 - `0` - no permissions
@@ -133,6 +136,8 @@ You can use the following numbers to represent permissions:
 - `5` - read and execute
 - `6` - read and write
 - `7` - read, write, and execute
+
+:::
 
 ## Modifying File Permissions
 

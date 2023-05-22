@@ -28,8 +28,7 @@ Some common options of the `sed` command are:
 - `-e`: Specify multiple editing commands.
 - `-n`: Suppress automatic printing of input lines.
 
-Example:
-
+:::info use case
 To replace the word "apple" with "banana" in a file named "fruits.txt", you can use the following command:
 
 ```bash
@@ -41,3 +40,5 @@ To edit the file in place, use the `-i` option:
 ```bash
 sed -i 's/apple/banana/g' fruits.txt
 ```
+
+:::

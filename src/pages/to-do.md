@@ -12,8 +12,8 @@ This page is a collection of projects ideas I came across and working on based o
 
 ### Linux Mail Alerts
 
-:::tip {Python}{Linux}-->{Enhancement Required}
-Python script that sends out a mail using smtp mail. This mail should moniter the services running if any of the service or deamon fails to start or stops unexpectedly. This cronjob sends out a mail to the admin alerts.
+:::tip [Python]&nbsp;[Linux]&nbsp;&nbsp;_**[Enhancement Required]**_
+Python script that sends out a mail using smtp mail. This mail should moniter the services running if any of the service or deamon fails to start or stops unexpectedly. This cronjob sends out a mail to the admin alerts.  
 :::
 
 :::caution [**_Source Code Link_**](https://github.com/abhilashreddysh/AutomationScripts/tree/main/LinuxPythonMail)
@@ -21,7 +21,7 @@ Python script that sends out a mail using smtp mail. This mail should moniter th
 
 ### peelSoN - Keep Awake
 
-:::tip {Powershell}
+:::tip [Powershell]
 This Projects is based on a Powershell script that prevents the system from going to sleep by programmatically pressing the ScrollLock key every X seconds
 :::
 :::danger [**_Source Code Link_**](https://github.com/abhilashreddysh/peelSoN)

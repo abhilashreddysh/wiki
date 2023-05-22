@@ -3,7 +3,7 @@ id: crontab
 title: How Cron Jobs Work
 description: Cronjobs are scheduled tasks to run on a specified time
 sidebar_position: 1
-sidebar_label: "CronTab"
+sidebar_label: "Crontab"
 keywords: [linux, crontab]
 ---
 
@@ -25,8 +25,10 @@ So, the parts of a cron command are:
 | [d] -- Month           | 0 = none and 12 = December | 0 0 0 7 \*   | The numerical month is 7 which determines that the job runs only in July.               |
 | [e] -- Day of the Week | 0 = Sunday and 7 = Sunday  | 0 0 \* \* 7  | 7 in the current position means that the job would only run on Sundays.                 |
 
+:::tip
 By default, cron sends an email to the owner of the crontab file when it runs.
 To turn off email output, add the following string, `>/dev/null 2>&1`, after the timing and command fields.
+:::
 
 For efficiency, cron syntax also uses operators. Operators are special characters that perform operations on the provided values in the cron field.
 
@@ -35,7 +37,7 @@ For efficiency, cron syntax also uses operators. Operators are special character
 - A _dash_ (`-`) indicates a range of values.
 - A _forward-slash_ (`/`) is used to divide a value into steps. (\*/2 would be every other value, \*/3 would be every third, \*/10 would be every tenth, etc.)
 
-EX:
+:::info use case
 
 | Cron Job                                 |  Command                       |
 | ---------------------------------------- | ------------------------------ |
@@ -48,3 +50,5 @@ EX:
 | Run Cron Job Every 15th of the Month     | 0 0 15 \* \* /root/backup.sh   |
 | Run Cron Job on December 1st -- Midnight | 0 0 0 12 \* /root/backup.sh    |
 | Run Cron Job on Saturday at Midnight     | 0 0 \* \* 6 /root/backup.sh    |
+
+:::
