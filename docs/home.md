@@ -1,5 +1,5 @@
 ---
-title: Abhi's Personal Documentation
+title: My Docs
 slug: /
 sidebar_position: 1
 sidebar_label: "Home"

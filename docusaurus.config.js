@@ -31,7 +31,9 @@ const config = {
     defaultLocale: "en",
     locales: ["en"],
   },
-
+  // Plugins
+  plugins: [require.resolve("@cmfcmf/docusaurus-search-local")],
+  // Plugins end
   presets: [
     [
       "classic",
@@ -44,14 +46,13 @@ const config = {
           // Remove this to remove the "edit this page" links.
           editUrl: "https://github.com/abhilashreddysh/wiki/blob/main",
         },
-        blog: false,
-        // {
-        //   showReadingTime: true,
-        //   // Please change this to your repo.
-        //   // Remove this to remove the "edit this page" links.
-        //   editUrl:
-        //     "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
-        // },
+        blog: {
+          showReadingTime: true,
+          // Please change this to your repo.
+          // Remove this to remove the "edit this page" links.
+          editUrl:
+            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
+        },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
         },
@@ -62,17 +63,6 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      // algolia: {
-      //   // The application ID provided by Algolia
-      //   appId: "IMCVZQZ3KP",
-      //   // Public API key: it is safe to commit it
-      //   apiKey: "920cb119f0922967e933c32b8fc4467f",
-      //   indexName: "wiki",
-      //   // Optional: see doc section below
-      //   contextualSearch: true,
-      //   placeholder: "Search the Docs",
-      //   searchPagePath: "search",
-      // },
       metadata: [{ name: "keywords", content: "abhi,wiki,docs,wiki" }],
       // Replace with your project's social card
       image: "img/logo.png",
@@ -102,7 +92,11 @@ const config = {
           //   label: "Tutorial",
           // },
           // { to: "/blog", label: "Blog", position: "left" },
-          { to: "/to-do", label: "To-Do", position: "left" },
+          {
+            type: "search",
+            position: "left",
+          },
+          { to: "/to-do", label: "To-Do", position: "right" },
           {
             href: "https://github.com/abhilashreddysh",
             label: "GitHub",
