@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwiki=self.webpackChunkwiki||[]).push([[3759],{1386:e=>{e.exports=JSON.parse('{"label":"home","permalink":"/wiki/docs/tags/home","allTagsPath":"/wiki/docs/tags","count":1,"items":[{"id":"Home","title":"My Docs","description":"Home Archives Image","permalink":"/wiki/docs/"}]}')}}]);

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwiki=self.webpackChunkwiki||[]).push([[754],{1052:i=>{i.exports=JSON.parse('{"label":"sed","permalink":"/wiki/docs/tags/sed","allTagsPath":"/wiki/docs/tags","count":1,"items":[{"id":"linux/tools/sed","title":"SED - Stream Editor","description":"Stream Editor in Linux","permalink":"/wiki/docs/linux/tools/sed"}]}')}}]);

@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkwiki=self.webpackChunkwiki||[]).push([[433],{4161:e=>{e.exports=JSON.parse('{"title":"Projects","slug":"/category/projects","permalink":"/wiki/docs/category/projects","navigation":{"previous":{"title":"SED - Stream Editor","permalink":"/wiki/docs/linux/tools/sed"},"next":{"title":"peelSoN","permalink":"/wiki/docs/projects/peelson"}}}')}}]);

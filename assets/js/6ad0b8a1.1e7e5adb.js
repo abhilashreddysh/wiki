@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwiki=self.webpackChunkwiki||[]).push([[3855],{6615:e=>{e.exports=JSON.parse('{"label":"powershell","permalink":"/wiki/blog/tags/powershell","allTagsPath":"/wiki/blog/tags","count":1}')}}]);

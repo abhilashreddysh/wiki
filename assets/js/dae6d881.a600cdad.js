@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwiki=self.webpackChunkwiki||[]).push([[3180],{6707:i=>{i.exports=JSON.parse('{"label":"linux","permalink":"/wiki/blog/tags/linux","allTagsPath":"/wiki/blog/tags","count":1}')}}]);
