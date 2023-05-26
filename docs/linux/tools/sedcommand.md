@@ -2,7 +2,10 @@
 id: sed
 title: SED - Stream Editor
 description: Stream Editor in Linux
-keywords: [linux, sed]
+tag: [linux, sed]
+last_update:
+  date: 05/21/2023 # Should be MM/DD/YYYY
+  author: Abhilash Reddy
 ---
 
 The `sed` command (short for "**stream editor**") is a powerful text-processing utility in Linux and other Unix-like operating systems. It is used to perform basic and advanced text transformations on input text files or streams.

@@ -3,7 +3,10 @@ id: linux-file-permissions
 title: Linux File Permissions
 description: File permissions on linux
 sidebar_position: 2
-keywords: [linux, file permissions]
+tag: [linux, file permissions]
+last_update:
+  date: 05/20/2023 # Should be MM/DD/YYYY
+  author: Abhilash Reddy
 ---
 
 There are some things that we take for granted when using a computer. We might imagine, for instance, that we have access to every file and folder on our computer and that we are free to edit or remove them as we see fit. However, this is not always the case, particularly when working with operating systems built on the Linux platform. File permissions are very important in Linux because they control who can access, change, or remove a file or folder.

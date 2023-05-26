@@ -4,6 +4,10 @@ slug: /
 sidebar_position: 1
 sidebar_label: "Home"
 id: Home
+tag: [home]
+last_update:
+  date: 05/20/2023 # Should be MM/DD/YYYY
+  author: Abhilash Reddy
 ---
 
 <!-- # Welcome to Abhi's Personal Documentation: Unlocking the Power of Learning -->
