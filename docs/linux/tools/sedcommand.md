@@ -2,7 +2,7 @@
 id: sed
 title: SED - Stream Editor
 description: Stream Editor in Linux
-tag: [linux, sed]
+tags: [linux, sed]
 last_update:
   date: 05/21/2023 # Should be MM/DD/YYYY
   author: Abhilash Reddy

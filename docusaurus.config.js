@@ -3,8 +3,8 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "Abhi's Wiki",
-  tagline: "My Personal Documentation Site",
+  title: "Abhilash",
+  tagline: "This My Personal Wiki and Project Showcase Site",
   favicon: "img/favicon.ico",
   url: "https://abhilashreddysh.github.io/", // Set the production url of your site here
   baseUrl: "/wiki", // For GitHub pages deployment, it is often '/<projectName>/'
@@ -36,6 +36,11 @@ const config = {
         },
         blog: {
           showReadingTime: true,
+          blogTitle: "My Projects",
+          blogDescription: "Collection of my projects that I have worked on.",
+          blogSidebarTitle: "All Projects",
+          blogSidebarCount: "ALL",
+          postsPerPage: 5,
           // Remove this to remove the "edit this page" links.
           editUrl:
             "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
@@ -71,7 +76,7 @@ const config = {
         },
       },
       navbar: {
-        title: "Abhi's Wiki",
+        title: "Abhilash",
         logo: {
           alt: "Abhi Logo",
           src: "img/logo.png",
@@ -83,19 +88,8 @@ const config = {
             position: "right",
             label: "Wiki",
           },
-          {
-            type: "docSidebar",
-            sidebarId: "linuxSidebar",
-            position: "left",
-            label: "Linux",
-          },
-          {
-            type: "docSidebar",
-            sidebarId: "projectsSidebar",
-            position: "left",
-            label: "Projects",
-          },
-          // { to: "/blog", label: "Blog", position: "left" },
+
+          { to: "/blog", label: "My Projects", position: "right" },
           {
             type: "search",
             position: "left",
@@ -114,11 +108,32 @@ const config = {
         style: "dark",
         links: [
           {
-            title: "Pages",
+            title: "Quick Links",
             items: [
               {
                 label: "To-Do Projects",
                 to: "/to-do",
+              },
+              {
+                label: "Wiki",
+                to: "/docs",
+              },
+              {
+                label: "Blog",
+                to: "/blog",
+              },
+            ],
+          },
+          {
+            title: "Tags",
+            items: [
+              {
+                label: "Project Tags",
+                href: "/blog/tags",
+              },
+              {
+                label: "Wiki Tags",
+                href: "/docs/tags",
               },
             ],
           },
@@ -139,13 +154,10 @@ const config = {
               },
             ],
           },
+
           {
             title: "More",
             items: [
-              // {
-              //   label: "Blog",
-              //   to: "/blog",
-              // },
               {
                 label: "GitHub Repository",
                 href: "https://github.com/abhilashreddysh/wiki",
@@ -153,6 +165,12 @@ const config = {
             ],
           },
         ],
+        logo: {
+          alt: "Abhi Logo",
+          src: "img/logo.png",
+          width: 50,
+          height: 50,
+        },
         copyright: `Copyright © ${new Date().getFullYear()} Abhilash Reddy.`,
       },
       prism: {

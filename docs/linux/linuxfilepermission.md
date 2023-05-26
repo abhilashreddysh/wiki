@@ -3,7 +3,7 @@ id: linux-file-permissions
 title: Linux File Permissions
 description: File permissions on linux
 sidebar_position: 2
-tag: [linux, file permissions]
+tags: [linux, file permissions]
 last_update:
   date: 05/20/2023 # Should be MM/DD/YYYY
   author: Abhilash Reddy

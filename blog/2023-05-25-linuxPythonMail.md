@@ -1,19 +1,19 @@
 ---
-id: linuxpythonmail
+slug: linuxpythonmail
 title: Linux Python Mail
 description: Version - 1.3
 sidebar_position: 2
-tag: [linux, python, mail, moniter]
-last_update:
-  date: 05/25/2023 # Should be MM/DD/YYYY
-  author: Abhilash Reddy
+tags: [linux, python, mail, moniter]
+authors: abhi
 ---
+
+Python Script to get linux services update through mail. Can be automated and scheduled to run in time intervals using crontab.
+
+<!--truncate-->
 
 :::info Version - 1.3
 [Repository Link](https://github.com/abhilashreddysh/AutomationScripts/tree/main/LinuxPythonMail)
 :::
-
-Python Script to get linux services update through mail. Can be automated and scheduled to run in time intervals using crontab.
 
 ### Setup
 
