@@ -1,6 +1,6 @@
 ---
 slug: linuxpythonmail
-title: Linux Python Mail
+title: Linux Status Mail
 description: Version - 1.3
 sidebar_position: 2
 tags: [linux, python, mail, moniter]
@@ -12,7 +12,7 @@ Python Script to get linux services update through mail. Can be automated and sc
 <!--truncate-->
 
 :::info Version - 1.3
-[Repository Link](https://github.com/abhilashreddysh/AutomationScripts/tree/main/LinuxPythonMail)
+[Repository Link](https://github.com/abhilashreddysh/AutomationScripts/tree/main/LinuxStatusMail)
 :::
 
 ### Setup

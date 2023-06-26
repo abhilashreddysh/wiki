@@ -4,7 +4,7 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Abhilash",
-  tagline: "This My Personal Wiki and Project Showcase Site",
+  tagline: "My Personal Documentation and Project Showcase Site",
   favicon: "img/favicon.ico",
   url: "https://abhilashreddysh.github.io/", // Set the production url of your site here
   baseUrl: "/wiki", // For GitHub pages deployment, it is often '/<projectName>/'
@@ -36,14 +36,14 @@ const config = {
         },
         blog: {
           showReadingTime: true,
-          blogTitle: "My Projects",
+          blogTitle: "Projects",
           blogDescription: "Collection of my projects that I have worked on.",
           blogSidebarTitle: "All Projects",
           blogSidebarCount: "ALL",
           postsPerPage: 5,
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
+            "https://github.com/abhilashreddysh/wiki/blob/main",
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
@@ -54,7 +54,7 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      metadata: [{ name: "keywords", content: "abhi,wiki,docs,wiki" }],
+      metadata: [{ name: "keywords", content: "abhi,wiki,docs,projects" }],
       // Replace with your project's social card
       image: "img/logo.png",
       announcementBar: {
@@ -84,12 +84,12 @@ const config = {
         items: [
           {
             type: "docSidebar",
-            sidebarId: "wikiSidebar",
+            sidebarId: "docSidebar",
             position: "right",
-            label: "Wiki",
+            label: "Documentation",
           },
 
-          { to: "/blog", label: "My Projects", position: "right" },
+          { to: "/blog", label: "Projects", position: "right" },
           {
             type: "search",
             position: "left",
@@ -111,15 +111,15 @@ const config = {
             title: "Quick Links",
             items: [
               {
-                label: "To-Do Projects",
+                label: "To-Do",
                 to: "/to-do",
               },
               {
-                label: "Wiki",
+                label: "Docs",
                 to: "/docs",
               },
               {
-                label: "Blog",
+                label: "Projects",
                 to: "/blog",
               },
             ],
@@ -132,7 +132,7 @@ const config = {
                 href: "/blog/tags",
               },
               {
-                label: "Wiki Tags",
+                label: "Docs Tags",
                 href: "/docs/tags",
               },
             ],
@@ -165,12 +165,12 @@ const config = {
             ],
           },
         ],
-        logo: {
-          alt: "Abhi Logo",
-          src: "img/logo.png",
-          width: 50,
-          height: 50,
-        },
+        // logo: {
+        //   alt: "Abhi Logo",
+        //   src: "img/logo.png",
+        //   width: 50,
+        //   height: 50,
+        // },
         copyright: `Copyright © ${new Date().getFullYear()} Abhilash Reddy.`,
       },
       prism: {
