@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwiki=self.webpackChunkwiki||[]).push([[630],{4538:e=>{e.exports=JSON.parse('{"permalink":"/wiki/blog/tags/web","page":1,"postsPerPage":5,"totalPages":1,"totalCount":1,"blogDescription":"Collection of my projects that I have worked on.","blogTitle":"Projects"}')}}]);

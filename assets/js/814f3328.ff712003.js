@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwiki=self.webpackChunkwiki||[]).push([[2535],{5641:i=>{i.exports=JSON.parse('{"title":"All Projects","items":[{"title":"Linux Web Console","permalink":"/wiki/blog/linuxwebconsole"},{"title":"Linux Status Mail","permalink":"/wiki/blog/linuxpythonmail"},{"title":"peelSoN","permalink":"/wiki/blog/peelson"}]}')}}]);

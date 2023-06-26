@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwiki=self.webpackChunkwiki||[]).push([[7188],{8241:i=>{i.exports=JSON.parse('{"label":"moniter","permalink":"/wiki/blog/tags/moniter","allTagsPath":"/wiki/blog/tags","count":2}')}}]);

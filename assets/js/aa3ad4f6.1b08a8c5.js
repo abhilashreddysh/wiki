@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkwiki=self.webpackChunkwiki||[]).push([[6054],{4320:e=>{e.exports=JSON.parse('{"permalink":"/wiki/blog/tags/python","page":1,"postsPerPage":5,"totalPages":1,"totalCount":1,"blogDescription":"Collection of my projects that I have worked on.","blogTitle":"My Projects"}')}}]);
