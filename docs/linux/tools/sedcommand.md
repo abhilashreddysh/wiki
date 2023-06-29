@@ -2,6 +2,8 @@
 id: sed
 title: SED - Stream Editor
 description: Stream Editor in Linux
+sidebar_position: 1
+sidebar_label: "SED"
 tags: [linux, sed]
 last_update:
   date: 05/21/2023 # Should be MM/DD/YYYY
