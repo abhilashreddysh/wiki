@@ -30,19 +30,23 @@ This project is stored in private repo contact me if you need the source code.
 
 ## Currently Working On
 
+:::info [Bash][Python]
+A terminal based dashboard to moniter the system performance like, CPU temperature, Disk Usage, Services running
+:::
+
+## Future Ideas
+
 ### Backup Automation Tool
 
-:::info [Python]-->[In Progress]
+:::note [Python]
 Build a Python script that automates the backup process for a specific directory or a set of files. The script should compress and archive the files, and then upload them to a cloud storage service (e.g., AWS S3 or Google Cloud Storage).
 :::
 
 ### Log Rotation and Compression
 
-:::info [Bash]-->[In Progress]
+:::note [Bash]
 Create a Bash script that handles log rotation and compression for log files in a specific directory. The script should rotate logs based on time or size, compress old logs, and maintain a set number of archived logs.
 :::
-
-## Future Ideas
 
 ### Automated Deployment Script
 
