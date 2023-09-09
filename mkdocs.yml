@@ -1,0 +1,69 @@
+# Project information
+site_name: Abhi Docs
+site_url: http://abhilashreddysh.github.io/wiki
+site_author: Abhilash Reddy
+site_description: >-
+  Documentaion site for my homelab.
+
+# Theme Conf
+theme:
+  name: material
+  #  for light and dark mode switch
+  palette:
+    # Light Mode
+    - scheme: default
+      primary: red
+      accent: teal
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    # Dark Mode
+    - scheme: slate
+      primary: teal
+      accent: red
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  icon:
+    logo: material/home-automation
+    repo: fontawesome/brands/github-alt
+    edit: material/pencil
+    view: material/eye
+
+  features:
+    - navigation.instant
+    - navigation.tabs.sticky
+    - navigation.tabs
+    - content.code.copy
+    - search.highlight
+    - search.suggest
+    - search.share
+    - content.action.edit
+    - content.action.view
+    - toc.follow
+    - navigation.top
+
+# Repository
+repo_name: abhilashreddysh/wiki
+repo_url: https://github.com/abhilashreddysh/wiki
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/abhilashreddysh
+    - icon: fontawesome/brands/linkedin-in
+      link: https://www.linkedin.com/in/sh-abhilash
+
+# Extensions
+markdown_extensions:
+  - md_in_html
+  - attr_list
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+plugins:
+  - tags
+  - search
