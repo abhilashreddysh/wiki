@@ -33,7 +33,6 @@ Append the samba configuration file located in `/etc/samba/smb.conf` with below 
 ```conf title="/etc/samba/smb.conf"
 [SHARE-NAME]
     comment = ANY-COMMENT
-    // highlight-next-line
     # allows only users from that group to access this path
     valid users = @GROUPNAME
     path = /PATH/TO/SHARE/DIR/
@@ -63,7 +62,6 @@ Make sure to update values to your server directory to be used.
 ```conf title="/etc/samba/smb.conf"
 [guest]
 comment = Guest File Share
-// highlight-next-line
 path = /PATH/TO/SHARE/DIR/ # change the path to match your guest FS
 read only = no
 browseable = yes
