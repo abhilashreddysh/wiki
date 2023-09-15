@@ -8,6 +8,7 @@ site_description: >-
 # Theme Conf
 theme:
   name: material
+  favicon: img/favicon.png
   #  for light and dark mode switch
   palette:
     # Light Mode
@@ -69,5 +70,6 @@ markdown_extensions:
       custom_checkbox: true
 
 plugins:
-  - tags
+  - tags:
+      tags_file: index.md
   - search
