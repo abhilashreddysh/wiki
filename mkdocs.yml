@@ -46,6 +46,7 @@ theme:
 # Repository
 repo_name: abhilashreddysh/wiki
 repo_url: https://github.com/abhilashreddysh/wiki
+edit_uri: ./edit/main/docs
 
 extra:
   social:
@@ -62,6 +63,8 @@ markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
   - pymdownx.tasklist:
       custom_checkbox: true
 
