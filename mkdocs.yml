@@ -1,9 +1,9 @@
 # Project information
-site_name: Abhi Docs
+site_name: Abhi's LearnOps
 site_url: http://abhilashreddysh.github.io/wiki
 site_author: Abhilash Reddy
 site_description: >-
-  Documentaion site for my homelab.
+  Documentaion site
 
 # Theme Conf
 theme:
@@ -13,15 +13,15 @@ theme:
   palette:
     # Light Mode
     - scheme: default
-      primary: red
-      accent: teal
+      primary: lime
+      accent: red
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
     # Dark Mode
     - scheme: slate
-      primary: teal
-      accent: red
+      primary: red
+      accent: lime
       toggle:
         icon: material/weather-sunny
         name: Switch to light mode
@@ -38,7 +38,6 @@ theme:
     - content.code.copy
     - search.highlight
     - search.suggest
-    - search.share
     - content.action.edit
     - content.action.view
     - toc.follow
@@ -70,6 +69,4 @@ markdown_extensions:
       custom_checkbox: true
 
 plugins:
-  - tags:
-      tags_file: index.md
   - search
