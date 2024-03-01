@@ -33,8 +33,10 @@ theme:
 
   features:
     - navigation.instant
-    - navigation.tabs.sticky
-    - navigation.tabs
+    - navigation.instant.progress
+    # - navigation.tabs.sticky
+    # - navigation.tabs
+    - navigation.sections
     - content.code.copy
     - search.highlight
     - search.suggest
@@ -42,6 +44,9 @@ theme:
     - content.action.view
     - toc.follow
     - navigation.top
+    - navigation.footer
+  
+  custom_dir: custom
 
 # Repository
 repo_name: abhilashreddysh/wiki
@@ -70,3 +75,8 @@ markdown_extensions:
 
 plugins:
   - search
+  - tags
+
+
+# copyright: Copyright &copy; 2023 - 2024 Abhilash Reddy
+copyright: ⚠️<b><i>Site still in progress</i>, Please report any errors as these were made while in learning phase.</b>
