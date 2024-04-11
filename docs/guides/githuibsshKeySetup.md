@@ -8,10 +8,11 @@ tags: [ssh, github, git]
 
 You can generate a new SSH key on your local machine. After you generate the key, you can add the public key to your account on GitHub.com to enable authentication for Git operations over SSH.
 
-!!! note GitHub improved security by dropping older, insecure key types on March 15, 2022.
+!!! note 
+    GitHub improved security by dropping older, insecure key types on March 15, 2022.
     As of that date, DSA keys (ssh-dss) are no longer supported. You cannot add new DSA keys to your personal account on GitHub.com.
 
-    RSA keys (ssh-rsa) with a valid_after before November 2, 2021 may continue to use any signature algorithm. RSA keys generated after that date must use a SHA-2 signature algorithm. Some older clients may need to be upgraded in order to use SHA-2 signatures.
+RSA keys (ssh-rsa) with a valid_after before November 2, 2021 may continue to use any signature algorithm. RSA keys generated after that date must use a SHA-2 signature algorithm. Some older clients may need to be upgraded in order to use SHA-2 signatures.
 
 - Open Terminal.
 - Paste the text below, replacing the email used in the example with your GitHub email address.
@@ -19,7 +20,8 @@ You can generate a new SSH key on your local machine. After you generate the key
     ssh-keygen -t ed25519 -C "your_email@example.com"
     ```
 
-!!! note If you are using a legacy system that doesn't support the Ed25519 algorithm, use:
+!!! note 
+    If you are using a legacy system that doesn't support the Ed25519 algorithm, use:
     ```
     ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
     ```
@@ -30,7 +32,7 @@ This creates a new SSH key, using the provided email as a label.
 
 When you're prompted to "Enter a file in which to save the key", you can press Enter to accept the default file location. Please note that if you created SSH keys previously, ssh-keygen may ask you to rewrite another key, in which case we recommend creating a custom-named SSH key. To do so, type the default file location and replace `id_ALGORITHM` with your custom key name.
 
-    > Enter a file in which to save the key (/home/YOU/.ssh/id_ALGORITHM):[Press enter]
+> Enter a file in which to save the key (/home/YOU/.ssh/id_ALGORITHM):[Press enter]
 
 - At the prompt, type a secure passphrase. For more information, see "Working with SSH key passphrases."
 
