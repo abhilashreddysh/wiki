@@ -1,0 +1,1540 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentaion site">
+      
+      
+        <meta name="author" content="Abhilash Reddy">
+      
+      
+        <link rel="canonical" href="http://abhilashreddysh.github.io/wiki/ssl/sslCertSetupforDuckdns/">
+      
+      
+        <link rel="prev" href="../ssl-ca/">
+      
+      
+      
+      <link rel="icon" href="../../img/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.35">
+    
+    
+      
+        <title>SSL cert setup for duckdns - Abhi's Wiki</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.35f28582.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="lime" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dehydrated" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Abhi&#39;s Wiki" class="md-header__button md-logo" aria-label="Abhi's Wiki" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 2 12h3v8h14v-8h3zm0 5.5c2.34 0 4.46.93 6 2.44l-1.2 1.18a6.79 6.79 0 0 0-4.8-1.95c-1.88 0-3.58.74-4.8 1.95L6 10.94a8.54 8.54 0 0 1 6-2.44m0 3.33c1.4 0 2.67.56 3.6 1.47l-1.2 1.17a3.4 3.4 0 0 0-2.4-.97c-.94 0-1.79.37-2.4.97L8.4 13.3a5.13 5.13 0 0 1 3.6-1.47m0 3.34c.94 0 1.7.74 1.7 1.66s-.76 1.67-1.7 1.67-1.7-.75-1.7-1.67.76-1.66 1.7-1.66"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Abhi's Wiki
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SSL cert setup for duckdns
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="lime" data-md-color-accent="red"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="red" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/abhilashreddysh/wiki" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1M480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2m-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3m-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1"/></svg>
+  </div>
+  <div class="md-source__repository">
+    abhilashreddysh/wiki
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Abhi&#39;s Wiki" class="md-nav__button md-logo" aria-label="Abhi's Wiki" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 2 12h3v8h14v-8h3zm0 5.5c2.34 0 4.46.93 6 2.44l-1.2 1.18a6.79 6.79 0 0 0-4.8-1.95c-1.88 0-3.58.74-4.8 1.95L6 10.94a8.54 8.54 0 0 1 6-2.44m0 3.33c1.4 0 2.67.56 3.6 1.47l-1.2 1.17a3.4 3.4 0 0 0-2.4-.97c-.94 0-1.79.37-2.4.97L8.4 13.3a5.13 5.13 0 0 1 3.6-1.47m0 3.34c.94 0 1.7.74 1.7 1.66s-.76 1.67-1.7 1.67-1.7-.75-1.7-1.67.76-1.66 1.7-1.66"/></svg>
+
+    </a>
+    Abhi's Wiki
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/abhilashreddysh/wiki" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1M480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2m-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3m-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1"/></svg>
+  </div>
+  <div class="md-source__repository">
+    abhilashreddysh/wiki
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Guides
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/analyzeNginxConfiguration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    How to Analyze Nginx configuration for security flaws
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/bookstack/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bookstack Setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/dnsmasq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DNS Server Setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/githuibsshKeySetup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Github SSH key setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/networkShareAutoMount/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Network Share Automount on Boot
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/nginx/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nginx Setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/sambasetup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Setting up Samba
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/transmissionBTsetup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Transmission BitTorrent Setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Linux
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Linux
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/crontab/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    How Cron Jobs Work
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/linuxfilepermission/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Linux File Permissions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/lvm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Logical Volume Manager
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/sedcommand/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SED - Stream Editor
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Ssl
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Ssl
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../WhatisSSL/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    What is SSL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../howToImportSSLToKeystore/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    How to import SSL to keystore
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssl-ca/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Local SSL Certificate Authority
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    SSL cert setup for duckdns
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    SSL cert setup for duckdns
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dehydrated" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dehydrated
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dehydrated">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#just-grab-the-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Just grab the code
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Just grab the code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#with-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      With git
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#under-the-hood" class="md-nav__link">
+    <span class="md-ellipsis">
+      Under the hood
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ok-where-were-we" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ok, Where were we…
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      Checkpoint
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#register-with-letsencrypt" class="md-nav__link">
+    <span class="md-ellipsis">
+      Register with letsencrypt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-the-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create the certificate
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-the-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configure the service
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-it-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      Test it out
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Test it out">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reference
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dehydrated" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dehydrated
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dehydrated">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#just-grab-the-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Just grab the code
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Just grab the code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#with-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      With git
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#under-the-hood" class="md-nav__link">
+    <span class="md-ellipsis">
+      Under the hood
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ok-where-were-we" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ok, Where were we…
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      Checkpoint
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#register-with-letsencrypt" class="md-nav__link">
+    <span class="md-ellipsis">
+      Register with letsencrypt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-the-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create the certificate
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-the-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configure the service
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-it-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      Test it out
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Test it out">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reference
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+<nav class="md-tags" >
+  
+    
+    
+    
+      <span class="md-tag">linux</span>
+    
+  
+    
+    
+    
+      <span class="md-tag">certificate</span>
+    
+  
+    
+    
+    
+      <span class="md-tag">ssl</span>
+    
+  
+    
+    
+    
+      <span class="md-tag">ddns</span>
+    
+  
+</nav>
+
+
+  
+    <a href="https://github.com/abhilashreddysh/wiki/edit/main/docs/ssl/sslCertSetupforDuckdns.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/abhilashreddysh/wiki/raw/main/docs/ssl/sslCertSetupforDuckdns.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
+    </a>
+  
+
+
+  <h1>SSL cert setup for duckdns</h1>
+
+<p>There are Certification Authorities that allow to create trusted certificates.</p>
+<p>Using them will avoid the warnings that we receive.</p>
+<p>The Certificate Authority I’ll use for this is <a href="https://letsencrypt.org/">https://letsencrypt.org/</a>:</p>
+<blockquote>
+<p>Let’s Encrypt is a free, automated, and open Certificate Authority.</p>
+</blockquote>
+<p>The process of creating a certificate and updating it (when it expires) is a little bit involved and while we could do it manually, for this step I’ll use a script that takes care of a lot of details directly for us.</p>
+<p>You can find it there: <a href="https://dehydrated.io/">https://dehydrated.io/</a></p>
+<blockquote>
+<p>Dehydrated is a client for signing certificates with an ACME-server (currently only provided by Let’s Encrypt) implemented as a relatively simple bash-script.</p>
+</blockquote>
+<p>The bash-script it’s referring to is here: <a href="https://github.com/lukas2511/dehydrated">https://github.com/lukas2511/dehydrated</a></p>
+<h2 id="dehydrated">Dehydrated</h2>
+<p>If you want to grab the code from github you could checkout it with git or svn at the url: “<em>https://github.com/lukas2511/dehydrated.git</em>”</p>
+<h3 id="just-grab-the-code">Just grab the code</h3>
+<p>Let’s now download it straight from the source:</p>
+<h4 id="with-git">With git</h4>
+<p>With git you can simply grab the code (and it will create the dehydrated folder for you).</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/lukas2511/dehydrated.git
+</code></pre></div>
+<p>That’s the output:</p>
+<div class="highlight"><pre><span></span><code>~/certs<span class="w"> </span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/lukas2511/dehydrated.git
+
+Cloning<span class="w"> </span>into<span class="w"> </span><span class="s1">&#39;dehydrated&#39;</span>...
+
+remote:<span class="w"> </span>Enumerating<span class="w"> </span>objects:<span class="w"> </span><span class="m">8</span>,<span class="w"> </span><span class="k">done</span>.
+
+remote:<span class="w"> </span>Counting<span class="w"> </span>objects:<span class="w"> </span><span class="m">100</span>%<span class="w"> </span><span class="o">(</span><span class="m">8</span>/8<span class="o">)</span>,<span class="w"> </span><span class="k">done</span>.
+
+remote:<span class="w"> </span>Compressing<span class="w"> </span>objects:<span class="w"> </span><span class="m">100</span>%<span class="w"> </span><span class="o">(</span><span class="m">7</span>/7<span class="o">)</span>,<span class="w"> </span><span class="k">done</span>.
+
+remote:<span class="w"> </span>Total<span class="w"> </span><span class="m">1922</span><span class="w"> </span><span class="o">(</span>delta<span class="w"> </span><span class="m">1</span><span class="o">)</span>,<span class="w"> </span>reused<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="o">(</span>delta<span class="w"> </span><span class="m">1</span><span class="o">)</span>,<span class="w"> </span>pack-reused<span class="w"> </span><span class="m">1914</span>
+
+Receiving<span class="w"> </span>objects:<span class="w"> </span><span class="m">100</span>%<span class="w"> </span><span class="o">(</span><span class="m">1922</span>/1922<span class="o">)</span>,<span class="w"> </span><span class="m">637</span>.08<span class="w"> </span>KiB<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="m">757</span>.00<span class="w"> </span>KiB/s,<span class="w"> </span><span class="k">done</span>.
+
+Resolving<span class="w"> </span>deltas:<span class="w"> </span><span class="m">100</span>%<span class="w"> </span><span class="o">(</span><span class="m">1200</span>/1200<span class="o">)</span>,<span class="w"> </span><span class="k">done</span>.
+</code></pre></div>
+<p>Enter in the folder to continue:</p>
+<p>```sh
+cd dehydrated/
+<div class="highlight"><pre><span></span><code>### Make it executable
+
+One important step is now to make the script executable.
+
+This can be easily done with the command:
+</code></pre></div>
+chmod a+x dehydrated
+<div class="highlight"><pre><span></span><code>Ok, if we follow the documentation it says that before executing it we need to specify the domain we want to secure inside a file named “_domains.txt_” (you can read this here: “https://github.com/lukas2511/dehydrated/blob/master/docs/domains_txt.md”)
+
+Let’s do this then:
+</code></pre></div>
+nano domains.txt
+<div class="highlight"><pre><span></span><code>Inside this file just write the name of your website, that should be something like this, naturally with your specific domain specified:
+</code></pre></div>
+<your_domain>.duckdns.org
+<div class="highlight"><pre><span></span><code>Once this is done we need to edit another file “_config_”
+</code></pre></div>
+nano config
+<div class="highlight"><pre><span></span><code>You can read about it here: “[https://github.com/lukas2511/dehydrated#config](https://github.com/lukas2511/dehydrated#config)”
+
+Write this inside it:
+
+```config
+# Which challenge should be used? Currently http-01 and dns-01 are supported
+
+CHALLENGETYPE=&quot;dns-01&quot;
+
+# Script to execute the DNS challenge and run after cert generation
+
+HOOK=&quot;${BASEDIR}/hook.sh&quot;
+</code></pre></div></p>
+<h3 id="under-the-hood">Under the hood</h3>
+<p>If you are not interested into the details of what we just wrote, <a href="#ok-where-were-we">skip</a> this section, otherwise bare with me.</p>
+<p>Going back to Let’s Encrypt, let’s read more of its definition:</p>
+<p>“<em>To enable HTTPS on your website, you need to get a certificate (a type of file) from a Certificate Authority (CA). Let’s Encrypt is a CA. In order to get a certificate for your website’s domain from Let’s Encrypt, you have to demonstrate control over the domain. With Let’s Encrypt, you do this using software that uses the <a href="https://ietf-wg-acme.github.io/acme/">ACME protocol</a>, which typically runs on your web host.</em>”</p>
+<p>Dehydrated is one of this software (well, script in this case) that use the ACME protocol we need. In fact, looking at dehydrated once again:</p>
+<p>“<em>Dehydrated is a client for signing certificates with an ACME-server (e.g. Let’s Encrypt) implemented as a relatively simple (zsh-compatible) bash-script. This client supports both ACME v1 and the new ACME v2 including support for wildcard certificates!</em>”</p>
+<p>Now, Let’s Encrypt need a demonstration that you control the domains you want to secure. For this we use the “dns-01” verification (you can read about other types of verification on their website). The details are here: <a href="https://docs.certifytheweb.com/docs/dns-validation.html">https://docs.certifytheweb.com/docs/dns-validation.html</a></p>
+<p>Dehydrated supports “dns-01” (<a href="https://github.com/lukas2511/dehydrated/blob/master/docs/dns-verification.md">https://github.com/lukas2511/dehydrated/blob/master/docs/dns-verification.md</a>).</p>
+<p>As described in that documentation, this type of verification requires you to be able to create a specific TXT DNS record (from <a href="https://en.wikipedia.org/wiki/TXT_record">wikipedia</a>: “<em>a type of resource record in the Domain Name System (DNS) used to provide the ability to associate arbitrary text with a host or other name, such as human readable information about a server, network, data center, or other accounting information.</em>“) for each hostname included in the certificate.</p>
+<p>Dehydrated then specified that we need a hook script that deploys the challenge to our DNS server.</p>
+<p>In order to do this, dehydrated will invoke our hook script… more on this in a bit.</p>
+<p>As a matter of fact, DuckDNS allows us to generate this TXT record.</p>
+<p>Looking at the documentation (<a href="https://www.duckdns.org/spec.jsp">https://www.duckdns.org/spec.jsp</a>):</p>
+<p>“<em>The TXT update URL can be requested on HTTPS or HTTP.</em>”</p>
+<p>and again:</p>
+<p>“<em>You can update your domain(s) TXT record with a single HTTPS get to DuckDNS your TXT record will apply to all sub-subdomains under your domain e.g. xxx.yyy.duckdns.org shares the same TXT record as yyy.duckdns.org</em>”</p>
+<p>As an example it’s given:</p>
+<div class="highlight"><pre><span></span><code>https://www.duckdns.org/update?domains={YOURVALUE}&amp;token={YOURVALUE}&amp;txt={YOURVALUE}[&amp;verbose=true][&amp;clear=true]
+</code></pre></div>
+<p>as you will see, we’ll do this in our dehydrated hook, using something like:</p>
+<div class="highlight"><pre><span></span><code>curl &quot;https://www.duckdns.org/update?domains=$domain&amp;token=$token&amp;txt=$4&quot;
+</code></pre></div>
+<p>The “$4” parameter is explained in dehydrated documentation (all the parameters):</p>
+<ul>
+<li>$1 an operation name (clean_challenge, deploy_challenge, deploy_cert, invalid_challenge or request_failure) and some operands for that.</li>
+</ul>
+<p>For deploy_challenge</p>
+<ul>
+<li>$2 is the domain name for which the certificate is required,</li>
+<li>$3 is a “challenge token” (which is not needed for dns-01), and</li>
+<li>$4 is a token which needs to be inserted in a TXT record for the domain.</li>
+</ul>
+<p>The DuckDNS hook is the one indicated online always in the documentation: <a href="https://github.com/lukas2511/dehydrated/wiki/DNS-01-hook-for-DuckDNS">https://github.com/lukas2511/dehydrated/wiki/DNS-01-hook-for-DuckDNS</a></p>
+<p>As another example, to clear the token the real important part is only the last parameter to pass to DuckDNS: “<em>clear=true</em>“.</p>
+<p>Note that the challenge token is what we’ll receive from Let’s Encrypt.</p>
+<p>So, the full logic flow is essentially the following:</p>
+<ul>
+<li>We request Let’s Encrypt (our Certificate Authority) to generate a certificate for our domain</li>
+<li>We receive the certificate and the challenge token to use to prove that we control the domain</li>
+<li>We tell DuckDNS to update the TXT record for our domain to match the token used for the challenge</li>
+<li>We then tell Let’s Encrypt validate the domain (more here: <a href="https://letsencrypt.org/how-it-works/">https://letsencrypt.org/how-it-works/</a>)</li>
+</ul>
+<p>This should help in clarifying what is this “dns-01”, how we tell DuckDNS to verify it and the meaning of the hook script.</p>
+<h3 id="ok-where-were-we">Ok, Where were we…</h3>
+<p>If you read the section above you should know why we need the hook script. In any case, we need a hook to help with the DNS challenge.</p>
+<p>In the same script we’ll also provide a way of restarting the Home Assistant service and this is used when the certificate is created/updated.</p>
+<p>Create a “<em>hook.sh</em>” file:</p>
+<div class="highlight"><pre><span></span><code>nano hook.sh
+</code></pre></div>
+<p>The content comes from the one provided by Dehydrated as an example: <a href="https://github.com/lukas2511/dehydrated/wiki/DNS-01-hook-for-DuckDNS">https://github.com/lukas2511/dehydrated/wiki/DNS-01-hook-for-DuckDNS</a></p>
+<p>I modified the “deploy_cert” section in order to restart the service using the “pi” account (because we need the sudo privileges).</p>
+<p>Anyway, this is the content:</p>
+<div class="highlight"><pre><span></span><code>#!/usr/bin/env bash
+
+set -e
+
+set -u
+
+set -o pipefail
+
+domain=&quot;&lt;your_domain&gt;&quot;
+
+token=&quot;&lt;your_token&gt;&quot;
+
+case &quot;$1&quot; in
+
+    &quot;deploy_challenge&quot;)
+
+        curl &quot;https://www.duckdns.org/update?domains=$domain&amp;token=$token&amp;txt=$4&quot;
+
+        echo
+
+        ;;
+
+    &quot;clean_challenge&quot;)
+
+        curl &quot;https://www.duckdns.org/update?domains=$domain&amp;token=$token&amp;txt=removed&amp;clear=true&quot;
+
+        echo
+
+        ;;
+
+    &quot;deploy_cert&quot;)
+
+        echo &quot;edit this section to do whatever you need to do to deploy and restart your service&quot;
+
+        ;;
+
+    &quot;unchanged_cert&quot;)
+
+        ;;
+
+    &quot;startup_hook&quot;)
+
+        ;;
+
+    &quot;exit_hook&quot;)
+
+        ;;
+
+    *)
+
+        echo Unknown hook &quot;${1}&quot;
+
+        exit 0
+
+        ;;
+
+esac
+</code></pre></div>
+<blockquote>
+<p><strong>NOTE</strong>: <em>change</em>:
+- <your_domain> with your specific DuckDNS domain, in the same way you did above
+- <your_token> with your DuckDNS token</p>
+</blockquote>
+<p>(if you t follow the other posts or you have a different installation, ensure to change the “deploy_cert” section as well to correctly restart the Home Assistant service)</p>
+<p>Last thing to do is make it executable:</p>
+<div class="highlight"><pre><span></span><code>chmod 755 hook.sh
+</code></pre></div>
+<h3 id="checkpoint">Checkpoint</h3>
+<p>At the end of all of this verify that this is what you have in your folder:</p>
+<div class="highlight"><pre><span></span><code>pi@raspberrypi:~/certs/dehydrated $ ls -la
+
+total 704
+
+drwxr-xr-x 2 pi pi   4096 Oct 20 23:14 .
+
+drwxr-xr-x 4 pi pi   4096 Oct 20 23:03 ..
+
+-rw-r--r-- 1 pi pi    195 Oct 20 23:08 config
+
+-rwxr-xr-x 1 pi pi 697126 Oct 20 23:03 dehydrated
+
+-rw-r--r-- 1 pi pi     18 Oct 20 23:07 domains.txt
+
+-rwxr-xr-x 1 pi pi    661 Oct 20 23:14 hook.sh
+</code></pre></div>
+<h3 id="register-with-letsencrypt">Register with letsencrypt</h3>
+<p>From the (dehydrated) documentation:</p>
+<p>“<em>Before any certificates can be requested, Dehydrated needs to acquire an account with the Certificate Authorities.</em></p>
+<p><em>Optionally, an email address can be provided. It will be used to e.g. notify about expiring certificates. You will usually need to accept the Terms of Service of the CA.</em></p>
+<p><em>Dehydrated will notify if no account is configured.</em></p>
+<p><em>Run with –register –accept-terms to create a new account.</em>”</p>
+<p>If you run dehydrated without the “<em>–accept-terms</em>” you can see the latest terms link.</p>
+<p>If you want to register a mail, edit your config file adding (with your email):</p>
+<div class="highlight"><pre><span></span><code># E-mail to use during the registration (default: &lt;unset&gt;)
+
+CONTACT_EMAIL=&lt;your_email&gt;
+</code></pre></div>
+<p>Time to register!</p>
+<p>When you are ready run dehydrated with the registration options:</p>
+<div class="highlight"><pre><span></span><code>./dehydrated --register --accept-terms
+</code></pre></div>
+<p>That should produce this output:</p>
+<div class="highlight"><pre><span></span><code>pi@raspberrypi:~/certs/dehydrated $ ./dehydrated --register --accept-terms
+
+# INFO: Using main config file ~/certs/dehydrated/config
+
++ Generating account key...
+
++ Registering account key with ACME server...
+
++ Done!
+</code></pre></div>
+<p>It created a new folder “accounts” that will contain a folder with the information about the registrations with letsencrypt.</p>
+<h3 id="create-the-certificate">Create the certificate</h3>
+<p>We can now happily created the wanted certificate!</p>
+<p>Just run dehydrated with this option:</p>
+<div class="highlight"><pre><span></span><code>./dehydrated -c
+</code></pre></div>
+<p>and this should be the output:</p>
+<div class="highlight"><pre><span></span><code>~/certs/dehydrated $ ./dehydrated -c
+
+# INFO: Using main config file ~/certs/dehydrated/config
+
+Unknown hook this_hookscript_is_broken__dehydrated_is_working_fine__please_ignore_unknown_hooks_in_your_script
+
++ Creating chain cache directory ~/certs/dehydrated/chains
+
+Processing &lt;your_domain&gt;.duckdns.org
+
++ Creating new directory ~/certs/dehydrated/certs/&lt;your_domain&gt;.duckdns.org ...
+
+Unknown hook this_hookscript_is_broken__dehydrated_is_working_fine__please_ignore_unknown_hooks_in_your_script
+
++ Signing domains...
+
++ Generating private key...
+
++ Generating signing request...
+
++ Requesting new certificate order from CA...
+
++ Received 1 authorizations URLs from the CA
+
++ Handling authorization for &lt;your_domain&gt;.duckdns.org
+
++ 1 pending challenge(s)
+
++ Deploying challenge tokens...
+
+OK
+
++ Responding to challenge for &lt;your_domain&gt;.duckdns.org authorization...
+
++ Challenge is valid!
+
++ Cleaning challenge tokens...
+
+OK
+
++ Requesting certificate...
+
++ Checking certificate...
+
++ Done!
+
++ Creating fullchain.pem...
+
+Password:
+
++ Done!
+</code></pre></div>
+<p>Note that at the end the script is requesting for the sudo password for pi.</p>
+<p>This is because the hook is trying to execute “deploy_cert” that tries to restart the service.</p>
+<p>If you didn’t change the default hook script in the way I described above, you should receive the request of the sudo password for “myuser”. At that point you will probably need to kill the script [CTRL+C].</p>
+<p>Everything is still ok, but you will manually need to restart the service.</p>
+<h2 id="configure-the-service">Configure the service</h2>
+<p>As already mentioned in the previous section, the configuration really varies from service to service, so you’ll need to verify how to specify the certificate and key in the custom settings of your service.</p>
+<p>The certificate and key can be found in:</p>
+<div class="highlight"><pre><span></span><code>ssl_certificate: ~/certs/dehydrated/certs/&lt;your_domain&gt;.duckdns.org/fullchain.pem
+
+ssl_key: ~/certs/dehydrated/certs/&lt;your_domain&gt;.duckdns.org/privkey.pem
+</code></pre></div>
+<h2 id="test-it-out">Test it out</h2>
+<p>You can now open the browser and try again to reach your Service website using HTTPS.</p>
+<p>This time the warning should have disappeared and everything should be nice and clean!</p>
+<h3 id="reference">Reference</h3>
+<ul>
+<li><a href="https://riccardotramma.com/2019/03/certificates-and-ssl-https/">Certificates and SSL/HTTPS with DuckDNS and Let’s Encrypt – Riccardo Tramma</a></li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../ssl-ca/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Local SSL Certificate Authority">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Local SSL Certificate Authority
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      ⚠️<b><i>Site still in progress</i>, Please report any errors as these were made while in learning phase.</b>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/abhilashreddysh" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/in/sh-abhilash" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3M447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.sections", "content.code.copy", "search.highlight", "search.suggest", "content.action.edit", "content.action.view", "toc.follow", "navigation.top", "navigation.footer"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56dfad97.min.js"></script>
+      
+    
+  </body>
+</html>
