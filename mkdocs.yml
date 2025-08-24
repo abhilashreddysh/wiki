@@ -12,6 +12,7 @@ site_url: https://abhilashreddysh.github.io/wiki
 theme:
   name: material
   language: en
+  custom_dir: custom
 
   # Icon Set
   icon:
@@ -84,7 +85,7 @@ extra:
       link: https://linkedin.com/in/sh-abhilash
       name: LinkedIn Profile
     - icon: fontawesome/solid/envelope
-      link: mailto:contact@example.com
+      link: mailto:abhilashreddy723@gmail.com
       name: Email Contact
 
 # Markdown Extensions

@@ -1,7 +1,63 @@
-{% extends "main.html" %}
+{% extends "main.html" %} {% block content %}
+<div style="text-align: center; padding: 1rem; max-width: 700px; margin: auto">
+  <!-- 404 Header -->
+  <h1
+    style="font-size: 5rem; margin-bottom: 0.1rem; color: var(--md-primary-fg)"
+  >
+    404
+  </h1>
+  <h2 style="margin-bottom: 1.5rem">Oops! Page not found</h2>
 
-<!-- Content -->
-{% block content %}
-  <h1>404 - Not found</h1>
-  <p>Request/add this <a href="https://github.com/abhilashreddysh/wiki/issues/new">page</a></p>
+  <!-- Description -->
+  <p
+    style="
+      margin-bottom: 1rem;
+      color: var(--md-default-fg-muted);
+      font-size: 1.1rem;
+    "
+  >
+    The page you’re looking for might have been moved, renamed, or doesn’t exist
+    yet. Let’s get you back on track.
+  </p>
+
+  <!-- Prominent Home Button -->
+  <a
+    href="{{ base_url }}"
+    class="md-button md-button--primary"
+    onmouseover="this.style.transform='scale(1.05)';"
+    onmouseout="this.style.transform='scale(1)';"
+  >
+    Take Me Home
+  </a>
+
+  <!-- Secondary Links -->
+  <div
+    style="
+      margin-top: 1rem;
+      color: var(--md-default-fg-muted);
+      font-size: 0.9rem;
+    "
+  >
+    Or explore the <a href="{{ base_url }}sitemap.xml">Sitemap</a> to browse all
+    pages
+  </div>
+
+  <!-- Issue Reporting -->
+  <div
+    style="
+      margin-top: 2rem;
+      font-size: 0.95rem;
+      color: var(--md-default-fg-muted);
+    "
+  >
+    Can’t find what you need?
+    <a
+      href="https://github.com/abhilashreddysh/wiki/issues/new"
+      target="_blank"
+      style="display: inline-block"
+    >
+      Submit a Request
+    </a>
+  </div>
+</div>
 {% endblock %}
