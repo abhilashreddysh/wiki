@@ -7,7 +7,7 @@ tags:
   - webserver
 ---
 
-> Gixy is a tool to analyze [Nginx](nginx.md) configuration. The main goal of Gixy is to prevent security misconfiguration and automate flaw detection. Currently supported Python versions are 2.7 and 3.5+. Right now Gixy can find:
+> Gixy is a tool to analyze [Nginx](guides/nginx.md) configuration. The main goal of Gixy is to prevent security misconfiguration and automate flaw detection. Currently supported Python versions are 2.7 and 3.5+. Right now Gixy can find:
 >
 > 1. [ssrf] Server Side Request Forgery
 > 2. [http_splitting] HTTP Splitting

@@ -1,0 +1,18 @@
+:root > * {
+  --md-primary-fg-color: #ece2d0;
+  --md-primary-bg-color: #1b1b1e;
+  --md-accent-fg-color: #ebebeb;
+  --md-accent-bg-color: #0cce6b;
+
+  --md-default-fg-color: #0cce6b; /* text color */
+  --md-default-bg-color: #1b1b1e;
+
+  --md-code-fg-color: #cccbd0;
+  --md-code-bg-color: #2e2f41;
+}
+.wip-badge {
+  color: red;
+  font-weight: bold;
+  font-size: 0.6em;
+  margin-left: 0.3em;
+}

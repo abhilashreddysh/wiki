@@ -1,82 +1,150 @@
-# Project information
-site_name: Abhi's Wiki
-site_url: http://abhilashreddysh.github.io/wiki
-site_author: Abhilash Reddy
-site_description: >-
-  Documentaion site
+# ========================================
+# Nexus Wiki Configuration
+# ========================================
 
-# Theme Conf
+# Site Metadata
+
+site_name: Nexus Wiki
+site_url: https://abhilashreddysh.github.io/wiki
+
+# Theme Configuration
+
 theme:
   name: material
-  favicon: img/favicon.png
-  #  for light and dark mode switch
-  palette:
-    # Light Mode
-    - scheme: default
-      primary: lime
-      accent: red
-      toggle:
-        icon: material/weather-night
-        name: Switch to dark mode
-    # Dark Mode
-    - scheme: slate
-      primary: red
-      accent: lime
-      toggle:
-        icon: material/weather-sunny
-        name: Switch to light mode
+  language: en
+
+  # Icon Set
   icon:
-    logo: material/home-automation
+    logo: material/rocket-launch-outline
     repo: fontawesome/brands/github-alt
-    edit: material/pencil
-    view: material/eye
+    edit: material/pencil-ruler
+    view: material/eye-outline
 
+  # Typography Settings
+  font:
+    text: "Roboto"
+    code: "JetBrains Mono"
+    text_weight: 300
+    code_weight: 400
+
+  # Color Schemes - Only dark mode
+  palette:
+    - scheme: slate
+      primary: custom
+      accent: custom
+
+  # Features
   features:
-    - navigation.instant
-    - navigation.instant.progress
-    # - navigation.tabs.sticky
-    # - navigation.tabs
-    - navigation.sections
-    - content.code.copy
-    - search.highlight
-    - search.suggest
-    - content.action.edit
-    - content.action.view
-    - toc.follow
-    - navigation.top
-    - navigation.footer
-  
-  custom_dir: custom
+    # Navigation Enhancements
+    - navigation.instant # Enables instant page transitions without full reloads
+    - navigation.tabs # Adds tabbed navigation for top-level sections
+    - navigation.tabs.sticky # Keeps tabs visible while scrolling
+    - navigation.sections # Enables section-based navigation in sidebar
+    - navigation.top # Adds "back to top" button
+    - navigation.indexes # Improves automatic index page generation
+    - navigation.keyboard # Enables keyboard navigation
+    - navigation.expand # Expand all collapsible subsections by default
 
-# Repository
-repo_name: abhilashreddysh/wiki
-repo_url: https://github.com/abhilashreddysh/wiki
-edit_uri: ./edit/main/docs
+    # Code Display Features
+    - content.code.copy # Adds copy button to code blocks (better UX for code snippets)
+    - content.code.annotate # Allows code annotations (useful for documentation)
 
+    # Search Improvements
+    - search.highlight # Highlights search terms in results (better visibility)
+    - search.suggest # Provides search suggestions as you type (faster finding)
+
+    # Table of Contents
+    - toc.follow # TOC highlights current section (better orientation)
+
+    # Header Behavior
+    - header.autohide # Auto-hides header when scrolling down (more reading space)
+
+    # Content Interaction
+    - content.tabs.link # Makes tabs linkable (shareable state)
+    - content.tooltips # Enables tooltips (additional info on hover)
+    - content.emoji # Enables emoji support (visual expression)
+
+    # Edit/View Options
+    - content.action.edit # Adds "edit this page" button (faster contributions)
+    - content.action.view # Adds "view source" button (transparency)
+
+# Repository & Editing
+# repo_name: abhilashreddysh/wiki
+# repo_url: https://github.com/abhilashreddysh/wiki
+# edit_uri: edit/main/docs/
+
+# Custom Components
 extra:
+  # Social Links
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/abhilashreddysh
-    - icon: fontawesome/brands/linkedin-in
-      link: https://www.linkedin.com/in/sh-abhilash
+      name: GitHub Profile
+    - icon: fontawesome/brands/linkedin
+      link: https://linkedin.com/in/sh-abhilash
+      name: LinkedIn Profile
+    - icon: fontawesome/solid/envelope
+      link: mailto:contact@example.com
+      name: Email Contact
 
-# Extensions
+# Markdown Extensions
+
 markdown_extensions:
-  - md_in_html
-  - attr_list
-  - def_list
-  - admonition
-  - pymdownx.details
-  - pymdownx.superfences
-  - pymdownx.tabbed:
-      alternate_style: true
-  - pymdownx.tasklist:
-      custom_checkbox: true
+  # Core Markdown Features
+  - meta # Adds YAML metadata support (for page frontmatter)
+  - tables # Enables GitHub-flavored markdown tables
+  - footnotes # Adds footnote support ([^1] syntax)
+  - attr_list # Allows HTML attributes in markdown ({: .class #id })
+  - md_in_html # Allows markdown within HTML blocks
+  - def_list # Enables definition lists (Term: Definition)
 
+  # Navigation & Structure
+  - toc: # Table of Contents generation
+      permalink: "⚓" # Adds anchor link icon next to headings
+      toc_depth: 3 # Shows headings up to level 3 (h1-h3) in TOC
+
+  # UI Components
+  - admonition # Creates note/warning/danger boxes (!!! syntax)
+  - pymdownx.details # Adds expandable/collapsible sections (<details>)
+  - pymdownx.tabbed: # Enables tabbed content sections
+      alternate_style: true # Uses Material's styled tabs instead of default
+  # - pymdownx.tasklist: # Enhanced task lists with customizable checkboxes
+  #     custom_checkbox: true # Allows styling checkboxes
+
+  # Code Handling
+  - pymdownx.superfences # Better code fence handlingt
+  - pymdownx.highlight: # Syntax highlighting
+      anchor_linenums: true # Adds anchors to line numbers
+      line_spans: __line # Allows targeting specific lines with CSS
+      pygments_lang_class: true # Adds language-specific CSS classes
+  - pymdownx.inlinehilite # Inline code highlighting (`code`{:.lang})
+
+  # Emoji & Symbols
+  - pymdownx.emoji: # Emoji support (:smile: syntax)
+      emoji_index:
+        !!python/name:material.extensions.emoji.twemoji # Uses Twitter emoji set
+
+
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+        # Renders as SVG
+
+        # Utility Extensions
+
+
+  - pymdownx.snippets # Allows file inclusion (like {% include "file.md" %})
+# Plugins
 plugins:
   - search
   - tags
 
+# Additional Assets & Resources
+extra_css:
+  - https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap
+  - https://cdn.jsdelivr.net/npm/jetbrains-mono@1.0.6/css/jetbrains-mono.min.css
+  - assets/css/custom.css
 
-# copyright: Copyright &copy; 2023 - 2024 Abhilash Reddy
-copyright: ⚠️<b><i>Site still in progress</i>, Please report any errors as these were made while in learning phase.</b>
+extra_javascript:
+  - assets/js/custom.js
+
+# Footer & Legal
+copyright: "&copy; Abhilash Reddy • Every error is a lesson • For personal learning and experimentation only. Use at your own risk."
