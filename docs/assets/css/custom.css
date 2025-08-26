@@ -1,18 +1,13 @@
 :root > * {
-  --md-primary-fg-color: #ece2d0;
-  --md-primary-bg-color: #1b1b1e;
-  --md-accent-fg-color: #ebebeb;
-  --md-accent-bg-color: #0cce6b;
+  --md-primary-fg-color: #aec3b0;
+  --md-primary-bg-color: #01161e;
 
-  --md-default-fg-color: #0cce6b; /* text color */
-  --md-default-bg-color: #1b1b1e;
+  --md-accent-fg-color: #aec3b0;
+  --md-accent-bg-color: #124559;
 
-  --md-code-fg-color: #cccbd0;
-  --md-code-bg-color: #2e2f41;
-}
-.wip-badge {
-  color: red;
-  font-weight: bold;
-  font-size: 0.6em;
-  margin-left: 0.3em;
+  --md-default-fg-color: #eff6e0;
+  --md-default-bg-color: #01161e;
+
+  --md-code-fg-color: #eff6e0;
+  --md-code-bg-color: #2b3a41;
 }

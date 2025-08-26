@@ -1,35 +1,69 @@
 ---
-title: "Hub"
+title: Hub
 hide:
   - navigation
   - toc
-  - footer
 ---
 
-# :material-server-network: Knowledge Hub {#main-header}
+# The Knowledge Hub
 
-<div class="grid cards" markdown="1">
+This is my personal **Knowledge Hub** — a place where I jot down everything about my homelab, infrastructure experiments, and projects.
 
-- **:material-account-hard-hat: Quick Links**
+- Quick notes, configs, and scripts I use.
+- Problems I run into (so I don’t have to solve them twice).
+- Random experiments, trials, and lessons learned along the way.
 
-      - [Disaster Recovery](# "Work In Progress")
-      - [Network Reset](# "Work In Progress")
-      - [Credentials Vault](lab/security/index.md#credentials-vault) _(🔒)_
+!!! warning "_Mostly refers to my setup and understanding, but if it helps someone else, great! Explore and see what I’ve been building and learning._"
 
-- **:material-book-multiple: Knowledge Base**
+---
 
-      - [Standard Procedures](# "Work In Progress")
-      - [Troubleshooting Guides](# "Work In Progress")
-      - [Change Log](# "Work In Progress")
+## **Quick Links**
+
+<div class="grid cards" markdown>
+
+- :material-docker: **Infrastructure**
+
+      ---
+      - [Inventory](homelab/index.md)
+      - [Self-Hosted Apps](# 'Work in Progress')
+      - [Monitoring Stack](# 'Work in Progress')
+
+- :material-book-open-page-variant: **Guides**
+
+      ---
+      - [Tutorials](KB/procedures/setup-guides/bookstack.md)
+      - [Troubleshooting](# 'Work in Progress')
+      - [SOP](KB/procedures/ImportSSLToKeystore.md)
 
 </div>
 
 ---
 
-## :material-bookmark-multiple: Bookmarks
+## **My Projects**
 
-<div class="grid cards" markdown="1">
-- [Network Diagrams](# "Work In Progress")
-- [Password Matrix (🔒)](lab/security/index.md#password-matrix)
-- [Service Dependencies](# "Work In Progress")
+<div class="grid cards" markdown>
+
+- ### Automation Scripts
+
+      ---
+      A collection of scripts to help in daily tasks.
+
+      [:material-file-document: View Documentation](# 'Work in Progress')
+
+      [:octicons-mark-github-16: Visit Repo](https://github.com/abhilashreddysh/AutomationScripts 'Github Link')
+
+- ### Homelab Ansible
+
+      ---
+      Ansible Playbooks for my homelab. Maintain all config in ansible as IaC
+
+      [:material-file-document: View Documentation](# 'Work in Progress')
+
+      [:octicons-mark-github-16: Visit Repo](https://github.com/shabhilash/homelab-ansible 'Github Link')
+
 </div>
+
+## **Github Activity**
+
+![GitHub Stats](https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=abhilashreddysh&theme=dark)
+![GitHub Streak](https://streak-stats.demolab.com?user=abhilashreddysh&locale=en&theme=dark&hide_border=true&border_radius=5&order=3)

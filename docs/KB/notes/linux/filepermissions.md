@@ -19,7 +19,7 @@ Each set of permissions consists of three letters, which are either `r`, `w`, or
 | x      | 1      | Execute    | Allows the user to execute the file or access the folder |
 | -      | 0      | -          | no Permission                                            |
 
-## Understanding file ownership in Linux:
+## Understanding file ownership in Linux
 
 Before we can understand how file permissions work, we need to understand how file ownership works in Linux. Every file and folder in Linux is owned by a particular user and group. The user is the person who created the file or folder, while the group is a collection of users who have been given permission to access the file or folder.
 
@@ -65,7 +65,7 @@ For example, to change the group ownership of a file named `myfile.txt` to a gro
 sudo chgrp staff myfile.txt
 ```
 
-## Understanding file permissions in Linux:
+## Understanding file permissions in Linux
 
 Now that we understand how file ownership works in Linux, we can look at how file permissions work. As we mentioned earlier, every file and folder in Linux has a set of permissions that determine who can access, modify, or delete it. These permissions are set using a combination of three letters, which are r (read), w (write), and x (execute).
 

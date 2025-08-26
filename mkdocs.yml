@@ -16,17 +16,17 @@ theme:
 
   # Icon Set
   icon:
-    logo: material/rocket-launch-outline
+    logo: material/rocket-launch
     repo: fontawesome/brands/github-alt
-    edit: material/pencil-ruler
+    edit: material/pencil-outline
     view: material/eye-outline
 
   # Typography Settings
-  font:
-    text: "Roboto"
-    code: "JetBrains Mono"
-    text_weight: 300
-    code_weight: 400
+  # font:
+  #   text: "Roboto"
+  #   code: "JetBrains Mono"
+  #   text_weight: 300
+  #   code_weight: 400
 
   # Color Schemes - Only dark mode
   palette:
@@ -44,7 +44,7 @@ theme:
     - navigation.top # Adds "back to top" button
     - navigation.indexes # Improves automatic index page generation
     - navigation.keyboard # Enables keyboard navigation
-    - navigation.expand # Expand all collapsible subsections by default
+    # - navigation.expand # Expand all collapsible subsections by default
 
     # Code Display Features
     - content.code.copy # Adds copy button to code blocks (better UX for code snippets)
@@ -70,9 +70,9 @@ theme:
     - content.action.view # Adds "view source" button (transparency)
 
 # Repository & Editing
-# repo_name: abhilashreddysh/wiki
-# repo_url: https://github.com/abhilashreddysh/wiki
-# edit_uri: edit/main/docs/
+repo_name: abhilashreddysh/wiki
+repo_url: https://github.com/abhilashreddysh/wiki
+edit_uri: edit/main/docs/
 
 # Custom Components
 extra:
@@ -101,7 +101,7 @@ markdown_extensions:
 
   # Navigation & Structure
   - toc: # Table of Contents generation
-      permalink: "⚓" # Adds anchor link icon next to headings
+      permalink: ⚓︎ # Adds anchor link icon next to headings
       toc_depth: 3 # Shows headings up to level 3 (h1-h3) in TOC
 
   # UI Components
@@ -128,7 +128,6 @@ markdown_extensions:
 
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
         # Renders as SVG
-
         # Utility Extensions
 
 
@@ -140,11 +139,10 @@ plugins:
 
 # Additional Assets & Resources
 extra_css:
-  - https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap
-  - https://cdn.jsdelivr.net/npm/jetbrains-mono@1.0.6/css/jetbrains-mono.min.css
   - assets/css/custom.css
 
 extra_javascript:
+  - https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js
   - assets/js/custom.js
 
 # Footer & Legal
