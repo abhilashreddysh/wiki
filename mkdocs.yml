@@ -92,7 +92,6 @@ extra:
 
 markdown_extensions:
   # Core Markdown Features
-  - meta # Adds YAML metadata support (for page frontmatter)
   - tables # Enables GitHub-flavored markdown tables
   - footnotes # Adds footnote support ([^1] syntax)
   - attr_list # Allows HTML attributes in markdown ({: .class #id })
@@ -136,6 +135,7 @@ markdown_extensions:
 plugins:
   - search
   - tags
+  - meta # Adds YAML metadata support (for page frontmatter)
 
 # Additional Assets & Resources
 extra_css:
