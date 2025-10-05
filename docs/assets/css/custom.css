@@ -11,3 +11,49 @@
   --md-code-fg-color: #eff6e0;
   --md-code-bg-color: #2b3a41;
 }
+
+/* Shared styles for all status badges */
+.md-status--new::after,
+.md-status--old::after,
+.md-status--draft::after,
+.md-status--updated::after {
+    border-radius: 0.1rem;
+    font-size: 0.4rem;
+    height: auto;
+    padding: 0.1rem 0.2rem;
+    -webkit-mask-image: none;
+    mask-image: none;
+    width: auto;
+}
+
+/* Individual content and colors */
+.md-status--new::after {
+    background-color: var(--md-code-fg-color);
+    color: var(--md-code-bg-color);
+    content: "NEW";
+}
+
+.md-status--old::after {
+    background-color: var(--md-code-bg-color);
+    color: var(--md-code-fg-color);
+    content: "OLD";
+}
+
+.md-status--draft::after {
+    background-color: var(--md-accent-bg-color);
+    color: var(--md-accent-fg-color);
+    content: "DFT";
+}
+
+.md-status--updated::after {
+    background-color: var(--md-accent-fg-color);
+    color: var(--md-accent-bg-color);
+    content: "MOD";
+}
+.md-status--new:hover::after,
+.md-status--old:hover::after,
+.md-status--draft:hover::after,
+.md-status--updated:hover::after {
+    background-color: initial;
+    color: initial;
+}

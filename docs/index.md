@@ -13,7 +13,7 @@ This is my personal **Knowledge Hub** — a place where I jot down everything ab
 - Problems I run into (so I don’t have to solve them twice).
 - Random experiments, trials, and lessons learned along the way.
 
-!!! warning "_Mostly refers to my setup and understanding, but if it helps someone else, great! Explore and see what I’ve been building and learning._"
+!!! abstract "_Mostly refers to my setup and understanding, but if it helps someone else, great! Explore and see what I’ve been building and learning._"
 
 ---
 

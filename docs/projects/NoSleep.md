@@ -1,7 +1,11 @@
 ---
 title: "No Sleep"
 tags: ["v2.3", "python", "tkinter"]
+status: old
 ---
+!!! warning "No longer actively maintained"
+    This script may still work, but updates are not planned. You can check out [PowerToys Awake](https://learn.microsoft.com/en-us/windows/powertoys/awake) as an alternative.
+
 
 Keep your computer awake by programmatically pressing the Scroll Lock key every X seconds.
 

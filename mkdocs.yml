@@ -87,6 +87,12 @@ extra:
     - icon: fontawesome/solid/envelope
       link: mailto:abhilashreddy723@gmail.com
       name: Email Contact
+  status:
+    old: "No longer maintained or in active use"
+    new: "Recently added to the repository"
+    updated: "Recently updated or improved"
+    draft: "Draft version — work in progress, may be incomplete"
+
 
 # Markdown Extensions
 
