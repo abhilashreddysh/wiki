@@ -1,7 +1,6 @@
 ---
 title: "Site Monitor"
 tags: ["v1.0", "python", "tkinter"]
-status: new
 ---
 
 SiteMonitor is a lightweight Python application that provides real-time monitoring of multiple websites via a small, transparent Tkinter GUI overlay.

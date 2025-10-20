@@ -5,7 +5,7 @@ status: draft
 
 !!! warning "All credentials are stored securely in Vault. No passwords are shown here."
 
-| System / Service | Username |          Notes           |
+| System / Service | Sample Username |          Notes           |
 | :--------------: | :------: | :----------------------: |
 |     Proxmox      |   root   |    SSH key preferred     |
 |       NAS        |  admin   | Shares for backups/media |

@@ -1,5 +1,5 @@
 ---
-title: Homelab Inventory
+title: Homelab Overview
 description: "Comprehensive overview of current homelab architecture, services, and recovery procedures."
 tags:
   - infrastructure
@@ -8,92 +8,121 @@ tags:
 status: updated
 ---
 
-A living document defining the **hardware**, **VMs**, **networks**, and **core services** powering my HomeLab ecosystem.  
-> _Primary Objective_: High-availability & rapid recovery across all nodes.
+!!! info "Important Note"
 
----
+    This document is intentionally **anonymized**: hostnames, IP ranges, exact OS versions, and specific product names are replaced with generic descriptors.
 
-## Infrastructure
+### Infrastructure
 
-=== "Servers"
+```yaml
+physical_servers:
+  - name: Primary Node
+    specs: mid-range CPU / 24GB RAM / ~500GB storage
+    role: ["Primary Node", "VPN Gateway", "Hypervisor Host"]
+    os: Virtualization OS / Linux
+    backup: Secondary Node
+    uptime_policy: always-on
 
-    ```yaml hl_lines="2 9"
-    servers:
-    - name: nexus
-        specs: i5-12400 / 24GB DDR5 / 360GB HDD
-        role: ["Primary Node", "Tailscale Gateway", "Proxmox Host"]
-        os: Proxmox 9.x / Debian 13
-        backup: hpnotebook
-        uptime_policy: always-on
+  - name: Secondary Node
+    specs: low-mid CPU / 12GB RAM / ~1TB storage
+    role: ["Secondary Node", "Backup Target"]
+    os: Linux
+    backup: none
+    uptime_policy: standby
 
-    - name: hpnotebook
-        specs: i3-6006U / 12GB DDR4 / 1000GB HDD
-        role: ["Secondary Node", "Backup Target"]
-        os: Ubuntu 22.04 LTS
-        backup: none
-        uptime_policy: standby
-    ```
+vm:
+  - name: Docker Host A
+    specs: 4 cores / 6GB RAM / GPU passthrough
+    role: ["Primary Docker Host"]
+    services:
+      - Media Server
+      - Photo Backup
 
-=== "Virtual Machines"
+  - name: Docker Host B
+    specs: 2 cores / 4GB RAM
+    role: ["Monitoring & Core Stack"]
+    services:
+      - Password Manager
+      - Reverse Proxy
+      - Dashboard / Metrics
+      - Automation Stack
+      - Torrent / Media Download
 
-    ```yaml hl_lines="2 10"
-    vm:
-    - name: docker-vm-01
-        specs: 4c / 6G / Intel iGPU passthrough
-        role: ["Primary Docker Host"]
-        services:
-          - jellyfin
-          - immich
-        backups: TBD
+lxc:
+  - name: VPN LXC
+    purpose: Encrypted remote gateway
+    host: Primary Node
+    resources: small
+    uptime_policy: always-on
 
-    - name: docker-vm-02
-        specs: 2c / 4G
-        role: ["Monitoring & Core Stack"]
-        services:
-          - Vaultwarden
-          - Nginx Proxy Manager
-          - Homepage
-          - Grafana
-          - Prometheus
-          - ARR Stack:
-              - Sonarr
-              - Radarr
-              - Prowlarr
-          - Transmission
-          - Jellyseerr
-        backups: TBD
-    ```
+  - name: DNS LXC
+    purpose: Internal DNS / DHCP services
+    host: Primary Node
+    resources: small
+    uptime_policy: always-on
 
----
+  - name: CI LXC
+    purpose: CI/CD IaC
+    host: Primary Node
+    resources: small-to-medium
+    uptime_policy: on-demand
+```
 
-## Network Topology
+## Networking
 
-=== "External Access Flow"
+
+=== "Home Network"
 
     <div style="font-family:sans-serif;max-width:520px;margin:0 auto;font-size:13px;line-height:1.4">
-    <!-- Remote Devices -->
-    <div style="text-align:center;margin-bottom:4px;">
-        <div style="border:1px solid #7c7c7c;padding:6px 10px;display:inline-block;">Remote Devices</div>
+        <!-- Internet / ISP -->
+        <div style="text-align:center;margin-bottom:4px;">
+            <div style="border:1px solid #7c7c7c;padding:6px 10px;display:inline-block;">Internet (ISP)</div>
+        </div>
+        <div style="text-align:center;color:#7c7c7c;font-size:11px;margin:-2px 0 4px;">⇅</div>
+        <!-- ISP Router -->
+        <div style="text-align:center;margin-bottom:4px;">
+            <div style="border:1px solid #7c7c7c;padding:6px 10px;display:inline-block;">ISP Router [Subnet A]<br><small style="color:#7c7c7c;font-size:11px;">Modem/Router combo</small></div>
+        </div>
+        <div style="text-align:center;color:#7c7c7c;font-size:11px;margin:-2px 0 4px;">⇅</div>
+        <div style="text-align:center;margin-bottom:4px;">
+            <div style="border:1px solid #7c7c7c;padding:6px 10px;display:inline-block;">Home Router [Internal LAN]<br><small style="color:#7c7c7c;font-size:11px;">Wi‑Fi + Ethernet for devices</small></div>
+        </div>
+        <div style="text-align:center;color:#7c7c7c;font-size:11px;margin:-2px 0 4px;">⇅</div>
+        <!-- Devices -->
+        <div style="display:flex;gap:5px;justify-content:center;flex-wrap:wrap;">
+            <div style="border:1px solid #7c7c7c;padding:5px 8px;text-align:center;flex:1;min-width:100px;">Desktop / Laptop</div>
+            <div style="border:1px solid #7c7c7c;padding:5px 8px;text-align:center;flex:1;min-width:100px;">Phone / Tablet</div>
+            <div style="border:1px solid #7c7c7c;padding:5px 8px;text-align:center;flex:1;min-width:100px;">Smart TV / IoT</div>
+            <div style="border:1px solid #7c7c7c;padding:5px 8px;text-align:center;flex:1;min-width:100px;">Server / Lab Device</div>
+        </div>
     </div>
-    <div style="text-align:center;color:#7c7c7c;font-size:11px;margin:-2px 0 4px;">▼</div>
-    <!-- Nexus Tailscale Gateway -->
-    <div style="text-align:center;margin-bottom:4px;">
-        <div style="border:1px solid #7c7c7c;padding:6px 10px;display:inline-block;">Tailscale Gateway<br><small style="color:#7c7c7c;font-size:11px;">Nexus / LXC</small></div>
-    </div>
-    <div style="text-align:center;color:#7c7c7c;font-size:11px;margin:-2px 0 4px;">▼</div>
-    <!-- Reverse Proxy -->
-    <div style="text-align:center;margin-bottom:4px;">
-        <div style="border:1px solid #7c7c7c;padding:6px 10px;display:inline-block;">Reverse Proxy<br><small style="color:#7c7c7c;font-size:11px;">Nginx Proxy Manager</small></div>
-    </div>
-    <div style="text-align:center;color:#7c7c7c;font-size:11px;margin:-2px 0 4px;">▼</div>
-    <!-- Internal Services -->
-    <div style="display:flex;gap:5px;justify-content:center;flex-wrap:wrap;">
-        <div style="border:1px solid #7c7c7c;padding:5px 8px;text-align:center;flex:1;min-width:100px;">Jellyfin</div>
-        <div style="border:1px solid #7c7c7c;padding:5px 8px;text-align:center;flex:1;min-width:100px;">Vaultwarden</div>
-        <div style="border:1px solid #7c7c7c;padding:5px 8px;text-align:center;flex:1;min-width:100px;">Immich</div>
-        <div style="border:1px solid #7c7c7c;padding:5px 8px;text-align:center;flex:1;min-width:100px;">Grafana</div>
-        <div style="border:1px solid #7c7c7c;padding:5px 8px;text-align:center;flex:1;min-width:100px;">Arr Stack</div>
-    </div>
+
+=== "Remote Access"
+
+    <div style="font-family:sans-serif;max-width:520px;margin:0 auto;font-size:13px;line-height:1.4">
+        <!-- Remote Devices -->
+        <div style="text-align:center;margin-bottom:4px;">
+            <div style="border:1px solid #7c7c7c;padding:6px 10px;display:inline-block;">Remote Devices</div>
+        </div>
+        <div style="text-align:center;color:#7c7c7c;font-size:11px;margin:-2px 0 4px;">▼</div>
+        <!-- Gateway -->
+        <div style="text-align:center;margin-bottom:4px;">
+            <div style="border:1px solid #7c7c7c;padding:6px 10px;display:inline-block;">Encrypted Remote Gateway<br><small style="color:#7c7c7c;font-size:11px;">VPN / Overlay Network</small></div>
+        </div>
+        <div style="text-align:center;color:#7c7c7c;font-size:11px;margin:-2px 0 4px;">▼</div>
+        <!-- Reverse Proxy -->
+        <div style="text-align:center;margin-bottom:4px;">
+            <div style="border:1px solid #7c7c7c;padding:6px 10px;display:inline-block;">Reverse Proxy<br><small style="color:#7c7c7c;font-size:11px;">Handles Internal Services</small></div>
+        </div>
+        <div style="text-align:center;color:#7c7c7c;font-size:11px;margin:-2px 0 4px;">▼</div>
+        <!-- Internal Services -->
+        <div style="display:flex;gap:5px;justify-content:center;flex-wrap:wrap;">
+            <div style="border:1px solid #7c7c7c;padding:5px 8px;text-align:center;flex:1;min-width:100px;">Media Server</div>
+            <div style="border:1px solid #7c7c7c;padding:5px 8px;text-align:center;flex:1;min-width:100px;">Password Manager</div>
+            <div style="border:1px solid #7c7c7c;padding:5px 8px;text-align:center;flex:1;min-width:100px;">Dashboard / Monitoring</div>
+            <div style="border:1px solid #7c7c7c;padding:5px 8px;text-align:center;flex:1;min-width:100px;">Automation / Stack</div>
+            <div style="border:1px solid #7c7c7c;padding:5px 8px;text-align:center;flex:1;min-width:100px;">Other Service</div>
+        </div>
     </div>
 
 
@@ -102,79 +131,84 @@ A living document defining the **hardware**, **VMs**, **networks**, and **core s
     ```yaml
     vlans:
     - id: 1
-        name: LAN
-        subnet: 10.10.0.0/16
-        devices: [nexus, hpnotebook, router]
+        name: WAN
+        subnet: Subnet A
         dhcp: router
-        notes: primary internal network
+        notes: ISP network / failover
 
     - id: 2
-        name: tailscale
-        subnet: 100.64.0.0/10
+        name: LAN
+        subnet: Internal LAN
+        devices: [gateway, workstation, router]
+        dhcp: internal DHCP
+        notes: Primary internal network
+
+    - id: 3
+        name: VPN Overlay
+        subnet: Overlay Network
         firewall: restricted
-        notes: encrypted overlay for remote access
+        notes: Encrypted remote access / VPN
     ```
 
----
 
-## Service Catalog
+## Service Catalog 
 
 === "Core Services"
 
     ```yaml
     core_services:
-    - name: pi-hole
-        type: DNS
+    - name: DNS / DHCP
+        type: network services
         restore_priority: critical
-        hosted_on: nexus/LXC
+        hosted_on: gateway / virtual node
         dependency: network-online.target
 
-    - name: tailscale
-        type: VPN Mesh
+    - name: VPN Mesh
+        type: encrypted overlay
         restore_priority: high
-        hosted_on: nexus/LXC
+        hosted_on: gateway / virtual node
         dependency: network-online.target
 
-    - name: samba
-        type: File Sharing
+    - name: File Sharing
+        type: storage service
         restore_priority: high
-        hosted_on: hpnotebook
-        dependency: pi-hole
+        hosted_on: workstation
+        dependency: DNS / DHCP
     ```
-
-=== "Monitoring & Metrics"
-
+=== "Observability"
     ```yaml
     observability:
-      - grafana
-      - prometheus
-      - node-exporter
+    - Dashboard / Metrics
+    - Time Series DB
+    - Node Exporter
     ```
 
----
+## Emergency Procedures 
 
-## Emergency Procedures
+!!! danger Important
+ 
+    All commands should be executed from *Primary Node* `[gateway]` unless otherwise noted.
+    Ensure network connectivity and backups before applying reset scripts.
 
-> **All commands should be executed from *Primary Node* `[nexus]` unless otherwise noted.**
-> *Ensure network connectivity and backups before applying reset scripts.*
-
-=== "Lockdown Procedure"
+=== "**Lockdown Procedure**"
 
     ```bash
-    # Step 1: Disable external access
-    tailscale down
+    # Step 1: Disable remote/overlay access
+    vpn stop
 
-    # Step 2: Stop all Docker services
-    docker stop $(docker ps -q)
+    # Step 2: Stop all containerized services
+    container stop --all
 
-    # Step 3: Flush all firewall rules
-    ufw reset
+    # Step 3: Reset firewall rules to default
+    firewall reset
 
-    # Step 4: Verify containment
-    nmap -sP 10.10.0.0/16
+    # Step 4: Verify network containment
+    network-scan local-subnets
     ```
 
-=== "Network Factory Reset"
+=== "**Network Factory Reset**"
 
-    `TBD`
-
+    ```text
+    # Implementation depends on your environment.
+    # Generic steps: backup configuration → disconnect internet → reset network devices → restore minimal services.
+    ```
