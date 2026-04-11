@@ -1,0 +1,72 @@
+---
+title: The Knowledge Hub
+description: This is my personal Knowledge Base (KB)
+template: splash
+hero:
+  tagline: Personal Knowledge Hub where I jot down everything about my homelab, infrastructure experiments, and projects.
+  image:
+    file: ../../assets/houston.webp
+  actions:
+    - text: Explore
+      link: /homelab/
+      icon: right-arrow
+    - text: Github Profile
+      link: https://github.com/abhilashreddysh
+      icon: external
+      variant: minimal
+---
+
+import {
+  Card,
+  CardGrid,
+  LinkCard,
+  LinkButton,
+  Aside,
+} from "@astrojs/starlight/components";
+
+## What you’ll find here
+
+<CardGrid stagger>
+  <Card title="Guides & How-Tos" icon="pencil">
+    Quick notes, configs, and scripts I use.
+  </Card>
+  <Card title="Troubleshooting Logs" icon="document">
+    Problems I run into (so I don’t have to solve them twice).
+  </Card>
+  <Card title="Tips & Insights" icon="open-book">
+    Random experiments, trials, and lessons learned along the way.
+  </Card>
+</CardGrid>
+
+:::caution
+Mostly refers to my setup and understanding, but if it helps someone else,
+great! Explore and see what I’ve been building and learning.
+:::
+
+## **My Projects**
+
+<CardGrid stagger>
+  <Card title="Automation Scripts" icon="rocket">
+    A collection of scripts to help in daily tasks.
+    <LinkButton
+      href="https://github.com/abhilashreddysh/AutomationScripts"
+      icon="external"
+      iconPlacement="start"
+    >
+      Source Code
+    </LinkButton>
+    <LinkButton href="#" icon="document" iconPlacement="start">
+      Documentation
+    </LinkButton>
+  </Card>
+  <Card title="Ansible Homelab" icon="github">
+    Ansible Playbooks for my homelab. Maintain all config in ansible as IaC
+    <LinkButton
+      href="https://github.com/shabhilash/homelab-ansible"
+      icon="external"
+      iconPlacement="start"
+    >
+      Source Code
+    </LinkButton>
+  </Card>
+</CardGrid>

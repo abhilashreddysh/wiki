@@ -1,0 +1,124 @@
+---
+title: "Site Monitor"
+tags: ["v1.0", "python", "tkinter"]
+sidebar:
+  order: 10
+---
+
+import { Badge, Tabs, TabItem } from "@astrojs/starlight/components";
+
+<Badge text="v1.0" />
+<Badge text="python" variant="tip" />
+
+---
+
+SiteMonitor is a lightweight Python application that provides real-time
+monitoring of multiple websites via a small, transparent Tkinter GUI overlay.
+
+It’s designed for minimal system impact while offering adaptive checks, performance tracking, and instant visual feedback.
+
+## Features
+
+- **Real-time Monitoring:** Checks HTTP/HTTPS endpoints continuously.
+- **Adaptive Backoff:** Sites with repeated failures are checked less frequently.
+- **Performance-Based Status:** Response times are color-coded:
+  - Fast: Green
+  - Moderate: Yellow
+  - Slow: Blue
+  - Failed: Red
+- **Minimal GUI:** Transparent, draggable overlay with minimal controls.
+- **Threaded Checking:** Non-blocking checks for multiple sites.
+- **Smart Retry Logic:** Exponential backoff for failed sites.
+- **Low Dependencies:** Uses only Python standard library[^lib].
+
+[^lib]: Uses `tkinter`, `urllib`, `threading`, `queue` and `socket` pyhton library.
+
+## Installation
+
+1.  Clone the repository:
+
+<Tabs>
+  <TabItem label="curl">
+    ```sh
+
+    curl -L -o site_monitor.pyw https://raw.githubusercontent.com/abhilashreddysh/AutomationScripts/main/Python/site_monitor.pyw
+    ```
+
+  </TabItem>
+  <TabItem label="wget">
+    ```sh 
+    
+    wget -O site_monitor.pyw https://raw.githubusercontent.com/abhilashreddysh/AutomationScripts/main/Python/site_monitor.pyw
+    ```
+  </TabItem>
+</Tabs>
+
+2.  Run the monitor:
+
+```bash
+python site_monitor.pyw
+```
+
+(or)
+
+Simply double-click site_monitor.pyw in File Explorer.
+
+> Requires Python 3.9 or later to be installed.
+
+## Configuration
+
+Most parameters are defined at the top of `monitor.py`:
+
+```python
+// monitor.py
+CHECK_INTERVAL = 30          # Seconds between checks
+REQUEST_TIMEOUT = 2.5        # HTTP request timeout in seconds
+MAX_THREADS = 5              # Max simultaneous checks
+UPDATE_INTERVAL = 200        # GUI refresh interval in ms
+BACKOFF_FACTOR = 1.5         # Adaptive retry multiplier
+MAX_BACKOFF = 300            # Max retry delay in seconds
+CHANGE_DETECTION_ONLY = True # Only redraw UI on status change
+```
+
+You can also define the websites to monitor:
+
+```python
+// monitor.py
+ENVIRONMENTS = {
+    "Google": "https://www.google.com",
+    "Example": "https://example.com",
+    "GitHub": "https://github.com",
+    "StackOverflow": "https://stackoverflow.com",
+}
+```
+
+## Usage
+
+- The GUI will appear as a small overlay on your desktop.
+- **Drag:** Right-click[^button].
+- **Close:** Left-click[^button].
+- The color-coded labels indicate the status of each site in real-time.
+
+[^button]: The top-left `>` button (changes to `x` on hover).
+
+## Architecture
+
+- **`ConnectionManager`**: Handles HTTP requests, redirects, and SSL.
+- **`check_site` / `check_site_threaded`**: Perform individual site checks in threads.
+- **`check_sites_batch`**: Batch checks with adaptive intervals and thread limiting.
+- **`process_updates`**: Efficient GUI update with batching.
+- **`monitor_loop`**: Background daemon thread running continuous monitoring.
+- **`Tkinter GUI`**: Minimal, draggable, and transparent overlay with dynamic label updates.
+
+## Sample Output
+
+```sh
+>  ← Close button (top-left, hover changes to x,Drag and move to reposition)
+Google: 120ms       (green)
+Example: 200ms      (green)
+GitHub: 520ms       (yellow)
+StackOverflow: 2300ms (blue)
+ServerError1: 500   (red)
+InvalidSite: DOWN   (orange)
+SlowRedirect: 1800ms (yellow)
+```

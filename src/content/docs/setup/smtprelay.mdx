@@ -1,0 +1,445 @@
+---
+title: SMTP Relay with Gmail
+---
+
+This document describes how to set up a **centralized SMTP relay** for a homelab using **Postfix** and **Gmail**.
+
+The goal is simple:
+
+- One SMTP endpoint for all services
+- No credentials stored in individual apps
+- Reliable delivery via Gmail
+- LAN-only, no public mail server maintenance
+
+---
+
+### Architecture
+
+![Architecture](../../../assets/Mail-Relay.svg)
+
+- Services send **plain SMTP** to the relay
+- The relay authenticates to Gmail
+- Gmail handles delivery and filtering
+
+### Why This Approach
+
+- Centralized configuration
+- No OAuth/TLS pain in every service
+- Easy password rotation
+- Easy debugging (single log location)
+- Avoids running a full mail server
+
+### Design Notes
+
+- Gmail rewrites the sender to the authenticated account
+- This is expected and desirable
+- Delivery reliability matters more than sender vanity
+
+---
+
+## Setup
+
+### Prerequisites
+
+- Debian/Ubuntu VM or LXC container for the relay
+- Gmail account dedicated to alerts (This will be the sender address)
+- LAN connectivity between services and relay
+
+### Step 1: Gmail Setup
+
+1. Create a dedicated Gmail account (e.g. `homelab.alerts@gmail.com`)
+2. Enable [**2-Step Verification**](https://support.google.com/accounts/answer/185839)
+3. Generate an [**App Password**](https://support.google.com/accounts/answer/185833?hl=en):
+   - App: Mail-Relay
+   - Device: Other → `homelab-relay`
+
+4. Save the generated password
+
+This password is the _only secret_ used by Postfix.
+
+### Step 2: Install Postfix
+
+```bash
+apt update
+apt install postfix mailutils rsyslog -y
+```
+
+During installation:
+
+- Mail type: **Internet Site**
+- System mail name: `homelab.local` (or use your own domain)
+
+### Step 3: Base Postfix Configuration
+
+Edit `/etc/postfix/main.cf`:
+
+```sh
+myhostname = mail-relay.homelab.lan
+mydomain = homelab.lan
+myorigin = $mydomain
+inet_interfaces = all
+inet_protocols = ipv4
+
+mydestination = localhost, $myhostname, $mydomain
+relayhost = [smtp.gmail.com]:587
+
+mynetworks = 127.0.0.0/8 192.168.0.0/16 10.0.0.0/8 172.16.0.0/12
+
+smtp_tls_security_level = encrypt
+smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+
+smtp_sasl_auth_enable = yes
+smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+smtp_sasl_security_options = noanonymous
+smtp_sasl_mechanism_filter = plain, login
+
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+
+smtpd_relay_restrictions =
+    permit_mynetworks,
+    reject_unauth_destination
+
+alias_maps = hash:/etc/postfix/aliases
+alias_database = hash:/etc/postfix/aliases
+
+compatibility_level = 3.6
+
+```
+
+This configuration:
+
+- Accepts mail only from the LAN
+- Prevents open relay behavior
+- Relays outbound mail via Gmail with TLS
+
+### Step 4: Create `/etc/mailname` (Optional)
+
+```bash
+echo "homelab.lan" > /etc/mailname
+```
+
+### Step 5: Configure Gmail Authentication
+
+Create `/etc/postfix/sasl_passwd`:
+
+```sh
+[smtp.gmail.com]:587 homelab.alerts@gmail.com:APP_PASSWORD
+```
+
+Secure and compile it:
+
+```bash
+chmod 600 /etc/postfix/sasl_passwd
+postmap hash:/etc/postfix/sasl_passwd
+```
+
+This generates `sasl_passwd.db`, which Postfix actually uses.
+
+### Step 6: Install SASL Modules
+
+Minimal systems do not include SASL mechanisms by default.
+
+```bash
+apt install libsasl2-modules libsasl2-modules-db -y
+```
+
+### Step 7: Restart and Test
+
+```bash
+systemctl restart postfix
+```
+
+Test from the relay:
+
+```bash
+echo "Relay test OK" | mail -s "HOMELAB TEST" homelab.alerts@gmail.com
+```
+
+Check logs:
+
+```bash
+journalctl -u postfix -f
+```
+
+Expected result: `status=sent`
+
+### Step 8: Verify SMTP Listener
+
+```bash
+ss -lntp | grep :25
+```
+
+Expected:
+
+```sh
+*:25 LISTEN
+```
+
+---
+
+## Service Configuration (Universal)
+
+All services use **the same SMTP settings**:
+
+```sh
+Server: mail-relay.homelab.lan (or LAN IP)
+Port: 25
+Encryption: None
+Username: (empty)
+Password: (empty)
+```
+
+No service talks directly to Gmail.
+
+---
+
+### Jellyfin
+
+Dashboard → Notifications → Email
+
+- SMTP server: relay hostname/IP
+- Port: 25
+- Secure connection: None
+
+### Radarr / Sonarr
+
+Settings → Notifications → Email
+
+- Server: relay hostname/IP
+- Port: 25
+- SSL: Disabled
+- STARTTLS: Disabled
+
+If running in Docker, ensure Docker subnets are included in `mynetworks`.
+
+### Vaultwarden
+
+Environment variables:
+
+```sh
+SMTP_HOST=mail-relay.homelab.lan
+SMTP_PORT=25
+SMTP_SECURITY=off
+SMTP_USERNAME=
+SMTP_PASSWORD=
+SMTP_FROM=homelab.alerts@gmail.com
+```
+
+Restart the container after changes.
+
+Vaultwarden defaults to STARTTLS unless explicitly disabled.
+
+### Proxmox
+
+Datacenter → Notifications → SMTP
+
+- Server: relay hostname/IP
+- Port: 25
+- Encryption: None
+
+---
+
+## Gmail Filters (Optional)
+
+Create filters for sanity:
+
+- Subject contains `CRITICAL` → Inbox + notification
+- Subject contains `WARNING` → Inbox only
+- Subject contains `INFO` → Archive + label
+
+---
+
+## Email Aliases for Homelab Services
+
+To avoid configuring real email addresses in every application, Postfix aliases are used. Services can send mail to internal addresses like `admin@homelab.lan`, and Postfix will transparently forward them to the configured Gmail account.
+
+This keeps application configuration stable and allows changing the real destination address in one place.
+
+### Alias Concept
+
+- Applications send mail to internal addresses (e.g. `admin@homelab.lan`)
+- Postfix accepts mail for the local domain
+- Aliases rewrite the recipient address
+- Final delivery happens via the Gmail SMTP relay
+
+### Configure Domain Identity
+
+Ensure the following values are set in `/etc/postfix/main.cf`:
+
+```
+myhostname = mail-relay.homelab.lan
+mydomain = homelab.lan
+myorigin = $mydomain
+mydestination = localhost, $myhostname, $mydomain
+```
+
+This allows Postfix to accept mail addressed to the local domain.
+
+### Create Aliases
+
+Edit the aliases file:
+
+```bash
+nano /etc/aliases
+```
+
+Example configuration:
+
+```
+root: yourgmail@gmail.com
+admin: yourgmail@gmail.com
+alerts: yourgmail@gmail.com
+```
+
+Aliases can also be defined using full addresses if desired:
+
+```
+admin@homelab.lan: yourgmail@gmail.com
+```
+
+### Enable Aliases in Postfix
+
+Verify the following lines exist in `/etc/postfix/main.cf`:
+
+```
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+```
+
+### Build Alias Database
+
+Postfix requires aliases to be compiled into a database:
+
+```bash
+newaliases
+```
+
+This generates `/etc/aliases.db`.
+
+### Reload Postfix
+
+```bash
+postfix reload
+```
+
+### Test Alias Delivery
+
+Send a test email:
+
+```bash
+echo "Alias test" | mail -s "ALIAS OK" admin@homelab.lan
+```
+
+Check logs if needed:
+
+```bash
+journalctl -u postfix -f
+```
+
+If the message is delivered to Gmail, aliasing is working correctly.
+
+### Notes on Sender Address
+
+When relaying through Gmail:
+
+- The visible sender will be the Gmail account
+- Gmail rewrites the From address
+- This behavior is expected and unavoidable
+
+Aliases affect the recipient only, not the authenticated sender.
+
+===
+
+---
+
+## Common Failure Modes
+
+### Missing `sasl_passwd.db`
+
+- Run `postmap hash:/etc/postfix/sasl_passwd`
+
+### `No worthy mechs found`
+
+- Install `libsasl2-modules`
+
+### SMTP timeout from containers
+
+- Add Docker subnets to `mynetworks`
+
+### STARTTLS errors
+
+- Disable TLS/STARTTLS in the client app
+
+---
+
+## Postfix Warnings and Cleanup (Compatibility & TLS)
+
+After reloading Postfix, the following warnings may appear:
+
+- Backwards-compatible default settings
+- Deprecation warning for `smtp_use_tls`
+
+These are **not errors**, but they should be cleaned up to keep logs quiet and future-proof the setup.
+
+### Backwards-Compatible Defaults
+
+Postfix may warn that it is using legacy defaults. Explicitly set the compatibility level:
+
+```bash
+postconf compatibility_level=3.6
+postfix reload
+```
+
+This locks Postfix behavior to the current version and avoids surprises during upgrades.
+
+### TLS Configuration Cleanup
+
+The parameter `smtp_use_tls` is deprecated and will be removed in future Postfix releases.
+
+Replace any usage of:
+
+```
+smtp_use_tls = yes
+```
+
+With:
+
+```
+smtp_tls_security_level = encrypt
+```
+
+This enforces TLS for outbound mail, which is required by Gmail.
+
+### Recommended TLS Settings (Optional)
+
+Add the following for better TLS stability:
+
+```
+smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+```
+
+### Reload Postfix
+
+```bash
+postfix reload
+```
+
+### Final Verification
+
+Send a test message to confirm everything works:
+
+```bash
+echo "Final sanity check" | mail -s "POSTFIX CLEAN" admin@homelab.lan
+```
+
+If the message is delivered successfully, the relay is fully configured and stable.
+
+---
+
+## Result
+
+- One SMTP endpoint
+- One external dependency
+- One place to debug
+- Alerts that actually arrive
