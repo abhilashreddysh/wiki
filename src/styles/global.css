@@ -30,3 +30,11 @@
   --sl-color-gray-7: #f4f4f4;
   --sl-color-black: #ffffff;
 }
+
+@layer lucode {
+  :root {
+    --radius: 0.5rem;
+    --sidebar-width: 17rem;
+    --container-max-width: 1440px;
+  }
+}

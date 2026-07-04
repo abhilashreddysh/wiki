@@ -1,0 +1,99 @@
+---
+title: Understanding kubectl
+description: kubectl Concepts
+sidebar:
+    label: "kubectl"
+---
+
+
+### What is kubectl?
+
+- Command line tool to interact with the Kubernetes API server.
+- Think of it as the "remote control" for your cluster.
+
+### Core Objects
+
+- **Pod:** Smallest deployable unit (runs containers).
+- **Deployment:** Ensures pods are running and handles updates.
+- **Service:** Exposes pods within cluster or externally.
+- **ConfigMap / Secret:** Store configuration and sensitive data.
+- **Namespace:** Logical separation of resources.
+- **Node:** A worker machine.
+
+### Declarative vs Imperative
+
+- Imperative: run direct commands (quick changes).
+- Declarative: apply YAML files (repeatable & versioned).
+
+### Mental Model
+
+Cluster → Node → Pod → Container
+Namespace groups → Resources → Controlled via kubectl.
+
+---
+
+## kubectl How-To
+---
+
+### Connect to a Cluster
+
+- Ensure kubeconfig is set up.
+- Switch context: `kubectl config use-context <name>`.
+
+### Inspect Resources
+
+- `kubectl get pods -A`
+- `kubectl describe pod <pod>`
+- `kubectl logs <pod>`
+
+### Deploy Applications
+
+- Imperative: `kubectl run nginx --image=nginx`
+- Declarative: `kubectl apply -f deployment.yaml`
+
+### Manage Configuration
+
+- ConfigMaps: `kubectl create configmap ...`
+- Secrets: `kubectl create secret ...`
+
+### Debug Workloads
+
+- View events: `kubectl get events`
+- Resource usage: `kubectl top pods`
+- Restart deployment: `kubectl rollout restart deployment <name>`
+
+---
+
+## kubectl Issues & Fixes
+---
+
+### Pods in `CrashLoopBackOff`
+
+- Symptom: Pod starts, crashes, restarts.
+- Cause: App inside container is failing.
+- Fix: `kubectl logs <pod>` → check error → fix image/command.
+
+### Pods in `ImagePullBackOff`
+
+- Symptom: Pod cannot pull image.
+- Causes:
+
+      - Wrong image name.
+      - Missing registry secret.
+
+- Fix: Check `kubectl describe pod <pod>` → correct image or add secret.
+
+### Pods stuck in `Pending`
+
+- Symptom: Pod never schedules.
+- Causes:
+
+      - Not enough CPU/memory.
+      - NodeSelector mismatch.
+
+- Fix: `kubectl describe pod <pod>` → reschedule or adjust spec.
+
+### ConfigMap/Secret not updating
+
+- Cause: Pods don’t reload automatically.
+- Fix: `kubectl rollout restart deployment <name>`.

@@ -1,6 +1,42 @@
 ---
 title: Services
-lastUpdated: 2026-01-18
+sidebar:
+    order: 2
 ---
 
-# Services Section
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs>
+  <TabItem label="Core Services">
+
+        ```yaml
+        core_services:
+        - name: DNS / DHCP
+            type: network services
+            restore_priority: critical
+            hosted_on: gateway / virtual node
+            dependency: network-online.target
+
+        - name: VPN Mesh
+            type: encrypted overlay
+            restore_priority: high
+            hosted_on: gateway / virtual node
+            dependency: network-online.target
+
+        - name: File Sharing
+            type: storage service
+            restore_priority: high
+            hosted_on: workstation
+            dependency: DNS / DHCP
+        ```
+    </TabItem>
+    <TabItem label="Observability">
+
+        ```yaml
+        observability:
+        - Dashboard / Metrics
+        - Time Series DB
+        - Node Exporter
+        ```
+    </TabItem>
+</Tabs>

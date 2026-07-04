@@ -1,0 +1,37 @@
+---
+title: "Emergency Procedures"
+sidebar:
+    order: 10
+---
+
+import { Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+
+<Aside type="danger" title="Important"> 
+    All commands should be executed from *Primary Node* `[gateway]` unless otherwise noted.
+    Ensure network connectivity and backups before applying reset scripts.
+</Aside>
+
+<Tabs>
+  <TabItem label="Lockdown Procedure">
+
+        ```bash
+        # Step 1: Disable remote/overlay access
+        vpn stop
+
+        # Step 2: Stop all containerized services
+        container stop --all
+
+        # Step 3: Reset firewall rules to default
+        firewall reset
+
+        # Step 4: Verify network containment
+        network-scan local-subnets
+        ```
+    </TabItem>
+    <TabItem label="Network Factory Reset">
+        ```text
+        # Implementation depends on your environment.
+        # Generic steps: backup configuration → disconnect internet → reset network devices → restore minimal services.
+        ```
+    </TabItem>
+</Tabs>

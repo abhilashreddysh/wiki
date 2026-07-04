@@ -1,0 +1,92 @@
+---
+title: Understanding Helm
+description: Helm Concepts
+sidebar:
+    label: "Helm"
+---
+
+### What is Helm?
+
+- Package manager for Kubernetes.
+- Packages are called **Charts**.
+- Each deployed chart is a **Release**.
+
+### Why Helm?
+
+- Simplifies deployments (instead of raw YAML).
+- Enables versioning, rollbacks, reusable configs.
+
+### Core Terms
+
+- **Chart:** Directory with templates + metadata.
+- **values.yaml:** Default configuration.
+- **Release:** Running instance of a chart.
+- **Repository:** Storage for charts (public or private).
+
+### Mental Model
+
+Chart (template) + Values (config) → Rendered YAML → Applied as Release.
+
+---
+
+## Helm How-To
+---
+
+### Install Helm
+
+- Download from [helm.sh](https://helm.sh).
+- Verify: `helm version`.
+
+### Manage Repos
+
+- Add repo: `helm repo add bitnami https://charts.bitnami.com/bitnami`
+- Update repos: `helm repo update`
+- Search: `helm search repo nginx`
+
+### Install / Upgrade / Remove
+
+- Install: `helm install myapp bitnami/nginx`
+- Upgrade: `helm upgrade myapp ./mychart -f values.yaml`
+- Uninstall: `helm uninstall myapp`
+
+### Inspect Releases
+
+- List releases: `helm list`
+- Show values: `helm get values myapp`
+- Show resources: `helm status myapp --show-resources`
+
+### Develop Charts
+
+- Create chart: `helm create mychart`
+- Lint chart: `helm lint ./mychart`
+- Render without deploying: `helm template ./mychart`
+
+---
+
+## Helm Issues & Fixes
+---
+
+### Values not applying
+
+- Symptom: App still runs with defaults.
+- Cause: Forgot `-f values.yaml`.
+- Fix: Use `helm get values myapp` to confirm applied values.
+
+### Upgrade failed
+
+- Symptom: Helm upgrade errors out.
+- Fix: Use `helm upgrade --install myapp ./mychart`.
+
+### Stale resources after uninstall
+
+- Symptom: PVCs or CRDs remain after uninstall.
+- Cause: Helm doesn’t remove PVCs/CRDs by default.
+- Fix: Manually delete leftover PVC/CRD.
+
+### Debugging install
+
+- Use dry-run: `helm install myapp ./mychart --dry-run --debug`.
+- Template rendering: `helm template ./mychart`.
+
+## Reference
+- [Helm Docs](https://helm.sh/docs/)

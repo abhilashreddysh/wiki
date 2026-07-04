@@ -1,76 +1,100 @@
 ---
 title: Overview
-description: Architecture, services, and operational notes for my personal homelab.
+description: Infrastructure documentation for my self-hosted environment.
 sidebar:
   order: 1
-  badge:
-    text: AI
-    variant: caution
+
 banner:
   content: |
-    Everything here runs on hardware I own, break, and fix. No cloud freebies. No magic credits. Just consequences. 
-    If you’re looking for beginner tutorials, this is not that. If you want real-world tradeoffs, welcome.
+    A continuously evolving self-hosted infrastructure built for learning,
+    automation, reliability, and breaking things before production does.
+
 tableOfContents: false
 ---
 
-import { Steps, Badge } from "@astrojs/starlight/components";
+import {
+  Card,
+  CardGrid,
+  Badge,
+  LinkButton,
+} from "@astrojs/starlight/components";
 
-<Badge text="AI-drafted · Manually validated" />
+<Badge text="Living Documentation" />
 
-This section describes my personal homelab:
+# Homelab Infrastructure
 
-> a self-hosted environment used for learning, experimentation, and running real services with real constraints.
+This documentation covers every part of my homelab, from physical hardware to
+Kubernetes workloads.
 
-It is designed to be rebuildable from bare metal
+The objective isn't simply to self-host services.
 
----
-
-## What This Homelab Runs
-
-- Virtualization and container orchestration
-- Internal services (DNS, monitoring, dashboards)
-- CI/CD experiments and automation
-- Storage, backups, and media workloads
-
-This is not a “try everything once” setup.  
-Anything unstable gets documented, broken, fixed, or removed.
+It's to build infrastructure that is reproducible, observable, automated, and
+easy to recover when something inevitably fails. Because eventually it will.
 
 ---
 
-## Documentation Structure
+<CardGrid stagger>
 
-<Steps>
+<Card title="Hardware" icon="server">
 
-1. **Hardware**  
-   Physical machines, specs, and roles
+Servers, storage, networking equipment,
+and the role of every machine.
 
-2. **Networking**  
-   IP layout, VLANs, DNS, firewall rules
+<LinkButton href="/homelab/hardware/">
+View Hardware
+</LinkButton>
 
-3. **Services**  
-   What runs, why it exists, and how it’s exposed
+</Card>
 
-4. **Automation**  
-   Ansible roles, CI jobs, maintenance workflows
+<Card title="Network" icon="seti:nunjucks">
 
-5. **Operations**  
-   Backups, monitoring, updates, and failure handling
+IP addressing,
+DNS,
+reverse proxy,
+VLANs,
+firewall rules,
+and routing.
 
-</Steps>
+<LinkButton href="/homelab/networking/">
+Network Docs
+</LinkButton>
+
+</Card>
+
+<Card title="Kubernetes" icon="seti:docker">
+
+Cluster architecture,
+GitOps,
+FluxCD,
+Ingress,
+storage,
+and workloads.
+
+<LinkButton href="/homelab/kubernetes/">
+Explore Cluster
+</LinkButton>
+
+</Card>
+
+<Card title="Services" icon="seti:shell">
+
+Applications running inside the homelab,
+their purpose,
+and how they interact.
+
+<LinkButton href="/homelab/services/">
+Browse Services
+</LinkButton>
+
+</Card>
+
+</CardGrid>
 
 ---
 
-## Design Principles
+## Documentation Goals
 
-    1. Git is the source of truth.
+This documentation exists for two reasons.
 
-    2. Backups are useless unless restored.
-
-    3. Security beats convenience.
-
-## Intended Audience
-
-- Me, in six months
-- Me, after a bad outage
-- Anyone reviewing my infrastructure skills
-- Anyone trying to build a sane homelab without YouTube fluff
+- Future me, after forgetting how something was configured.
+- Anyone interested in understanding how the infrastructure is built.
