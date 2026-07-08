@@ -1,0 +1,53 @@
+name: Build and Push Image
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  REGISTRY: gitea.484154.xyz
+  IMAGE: gitea.484154.xyz/nexus/wiki
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check secret
+        run: |
+          if [ -z "${{ secrets.REGISTRY_TOKEN }}" ]; then
+            echo "Secret is empty"
+            exit 1
+          else
+            echo "Secret exists"
+          fi
+
+      - name: Login to Gitea Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ gitea.actor }}
+          password: ${{ secrets.REGISTRY_TOKEN }}
+      
+      - name: Set variables
+        run: |
+          echo "SHORT_SHA=$(echo '${{ github.sha }}' | cut -c1-7)" >> "$GITHUB_ENV"
+          
+      - name: Build image
+        run: |
+          docker build \
+            -t $IMAGE:latest \
+            -t $IMAGE:$SHORT_SHA .
+
+      - name: Push image
+        run: |
+          docker push $IMAGE:latest
+          docker push $IMAGE:$SHORT_SHA
+
+      - name: Cleanup Docker
+        if: always()
+        run: |
+          docker system prune -af --volumes

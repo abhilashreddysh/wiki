@@ -1,0 +1,31 @@
+---
+title: Page Not Found
+description: The requested page could not be found.
+template: splash
+editUrl: false
+tableOfContents: false
+
+hero:
+  title: "404"
+  tagline: >
+    Even in a well-documented homelab, a few links eventually escape containment.
+---
+
+import {
+  Aside, Card
+} from "@astrojs/starlight/components";
+
+<Aside type="tip" title="Looking for something specific?">
+
+If you followed an old bookmark or an external link, the page may have been moved during a documentation update.
+
+**The search bar is usually the fastest way to locate the new page.**
+
+</Aside>
+
+<Card title="Possible Causes" icon='question-circle'>
+  - The page was renamed.
+  - The documentation was reorganized.
+  - The URL contains a typo.
+  - The page hasn't been written yet.
+</Card>

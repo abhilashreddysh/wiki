@@ -1,0 +1,100 @@
+---
+title: Overview
+description: Infrastructure documentation for my self-hosted environment.
+sidebar:
+  order: 1
+
+banner:
+  content: |
+    A continuously evolving self-hosted infrastructure built for learning,
+    automation, reliability, and breaking things before production does.
+
+tableOfContents: false
+---
+
+import {
+  Card,
+  CardGrid,
+  Badge,
+  LinkButton,
+} from "@astrojs/starlight/components";
+
+<Badge text="Living Documentation" />
+
+# Homelab Infrastructure
+
+This documentation covers every part of my homelab, from physical hardware to
+Kubernetes workloads.
+
+The objective isn't simply to self-host services.
+
+It's to build infrastructure that is reproducible, observable, automated, and
+easy to recover when something inevitably fails. Because eventually it will.
+
+---
+
+<CardGrid stagger>
+
+<Card title="Hardware" icon="server">
+
+Servers, storage, networking equipment,
+and the role of every machine.
+
+<LinkButton href="/homelab/hardware/">
+View Hardware
+</LinkButton>
+
+</Card>
+
+<Card title="Network" icon="seti:nunjucks">
+
+IP addressing,
+DNS,
+reverse proxy,
+VLANs,
+firewall rules,
+and routing.
+
+<LinkButton href="/homelab/networking/">
+Network Docs
+</LinkButton>
+
+</Card>
+
+<Card title="Kubernetes" icon="seti:docker">
+
+Cluster architecture,
+GitOps,
+FluxCD,
+Ingress,
+storage,
+and workloads.
+
+<LinkButton href="/homelab/kubernetes/">
+Explore Cluster
+</LinkButton>
+
+</Card>
+
+<Card title="Services" icon="seti:shell">
+
+Applications running inside the homelab,
+their purpose,
+and how they interact.
+
+<LinkButton href="/homelab/services/">
+Browse Services
+</LinkButton>
+
+</Card>
+
+</CardGrid>
+
+---
+
+## Documentation Goals
+
+This documentation exists for two reasons.
+
+- Future me, after forgetting how something was configured.
+- Anyone interested in understanding how the infrastructure is built.

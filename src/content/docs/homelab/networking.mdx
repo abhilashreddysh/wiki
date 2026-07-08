@@ -1,0 +1,87 @@
+---
+title: Networking
+sidebar:
+    order: 2
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs>
+    <TabItem label="Home Network">
+        <div style="font-family:sans-serif;max-width:520px;margin:0 auto;font-size:13px;line-height:1.4">
+            {/* <!-- Internet / ISP --> */}
+            <div style="text-align:center;margin-bottom:4px;">
+                <div style="border:1px solid #7c7c7c;padding:6px 10px;display:inline-block;">Internet (ISP)</div>
+            </div>
+            <div style="text-align:center;color:#7c7c7c;font-size:11px;margin:-2px 0 4px;">⇅</div>
+            {/* <!-- ISP Router --> */}
+            <div style="text-align:center;margin-bottom:4px;">
+                <div style="border:1px solid #7c7c7c;padding:6px 10px;display:inline-block;">ISP Router [Subnet A]<br><small style="color:#7c7c7c;font-size:11px;">Modem/Router combo</small></br></div>
+            </div>
+            <div style="text-align:center;color:#7c7c7c;font-size:11px;margin:-2px 0 4px;">⇅</div>
+            <div style="text-align:center;margin-bottom:4px;">
+                <div style="border:1px solid #7c7c7c;padding:6px 10px;display:inline-block;">Home Router [Internal LAN]<br><small style="color:#7c7c7c;font-size:11px;">Wi‑Fi + Ethernet for devices</small></br></div>
+            </div>
+            <div style="text-align:center;color:#7c7c7c;font-size:11px;margin:-2px 0 4px;">⇅</div>
+            {/* <!-- Devices --> */}
+            <div style="display:flex;gap:5px;justify-content:center;flex-wrap:wrap;">
+                <div></div>
+                <div style="border:1px solid #7c7c7c;padding:5px 8px;text-align:center;flex:1;min-width:100px;">Desktop / Laptop</div>
+                <div style="border:1px solid #7c7c7c;padding:5px 8px;text-align:center;flex:1;min-width:100px;">Phone / Tablet</div>
+                <div style="border:1px solid #7c7c7c;padding:5px 8px;text-align:center;flex:1;min-width:100px;">Smart TV / IoT</div>
+                <div style="border:1px solid #7c7c7c;padding:5px 8px;text-align:center;flex:1;min-width:100px;">Server / Lab Device</div>
+            </div>
+        </div>
+    </TabItem>
+    <TabItem label="Remote Access">
+        <div style="font-family:sans-serif;max-width:520px;margin:0 auto;font-size:13px;line-height:1.4">
+            {/* <!-- Remote Devices --> */}
+            <div style="text-align:center;margin-bottom:4px;">
+                <div style="border:1px solid #7c7c7c;padding:6px 10px;display:inline-block;">Remote Devices</div>
+            </div>
+            <div style="text-align:center;color:#7c7c7c;font-size:11px;margin:-2px 0 4px;">▼</div>
+            {/* <!-- Gateway --> */}
+            <div style="text-align:center;margin-bottom:4px;">
+                <div style="border:1px solid #7c7c7c;padding:6px 10px;display:inline-block;">Encrypted Remote Gateway<br><small style="color:#7c7c7c;font-size:11px;">VPN / Overlay Network</small></br></div>
+            </div>
+            <div style="text-align:center;color:#7c7c7c;font-size:11px;margin:-2px 0 4px;">▼</div>
+            {/* <!-- Reverse Proxy --> */}
+            <div style="text-align:center;margin-bottom:4px;">
+                <div style="border:1px solid #7c7c7c;padding:6px 10px;display:inline-block;">Reverse Proxy<br><small style="color:#7c7c7c;font-size:11px;">Handles Internal Services</small></br></div>
+            </div>
+            <div style="text-align:center;color:#7c7c7c;font-size:11px;margin:-2px 0 4px;">▼</div>
+            {/* <!-- Internal Services --> */}
+            <div style="display:flex;gap:5px;justify-content:center;flex-wrap:wrap;">
+                <div></div>
+                <div style="border:1px solid #7c7c7c;padding:5px 8px;text-align:center;flex:1;min-width:100px;">Password Manager</div>
+                <div style="border:1px solid #7c7c7c;padding:5px 8px;text-align:center;flex:1;min-width:100px;">Dashboard / Monitoring</div>
+                <div style="border:1px solid #7c7c7c;padding:5px 8px;text-align:center;flex:1;min-width:100px;">Automation / Stack</div>
+                <div style="border:1px solid #7c7c7c;padding:5px 8px;text-align:center;flex:1;min-width:100px;">Other Service</div>
+            </div>
+        </div>
+    </TabItem>
+    <TabItem label="VLAN Map">
+
+        ```yaml
+        vlans:
+        - id: 1
+            name: WAN
+            subnet: Subnet A
+            dhcp: router
+            notes: ISP network / failover
+
+        - id: 2
+            name: LAN
+            subnet: Internal LAN
+            devices: [gateway, workstation, router]
+            dhcp: internal DHCP
+            notes: Primary internal network
+
+        - id: 3
+            name: VPN Overlay
+            subnet: Overlay Network
+            firewall: restricted
+            notes: Encrypted remote access / VPN
+        ```
+    </TabItem>
+</Tabs>

@@ -1,0 +1,101 @@
+---
+title: Logical Volume Manager
+description: Logical Volume Manager (LVM)
+tags: [linux, lvm]
+---
+
+import LvmDiagram from "../../../../components/LvmDiagram.astro";
+
+LVM (aka Logical Volume Manager) is a tool for logical volume management which includes allocating disks, striping, mirroring and resizing logical volumes.
+
+<LvmDiagram />
+
+LVM consists of **three** main components:
+
+- Physical Volume (**PV**)
+- Volume Group (**VG**)
+- Logical Volume (**LV**)
+
+## Physical Volume
+
+A physical volume is a collection of disk partitions used to store all server data.  
+These are the physical hard drives that are mounted to the CPU.
+
+Physical volumes are usually mounted on `/dev/sda`, `/dev/sdb`, and so on.
+
+### Creating a Physical Volume
+
+To create a physical volume use the `pvcreate` command:
+
+```console
+pvcreate <device_name>
+```
+
+The above command initializes a physical volume.
+
+### Display Physical Volumes
+
+To display physical volumes use:
+
+- `pvdisplay`
+- `pvs`
+- `pvscan`
+
+## Volume Groups
+
+A volume group (**VG**) is created by combining multiple physical volumes into a single storage pool, equal to the combined capacity of those devices.
+
+### Creating a Volume Group
+
+To create a volume group use the `vgcreate` command:
+
+```console
+vgcreate <vgname> <device_name>
+```
+
+### Display Volume Groups
+
+To display volume groups use:
+
+- `vgdisplay`
+- `vgs`
+- `vgscan`
+
+### Extending a Volume Group
+
+To extend a volume group use the `vgextend` command:
+
+```console
+vgextend <vgname> <device_name>
+```
+
+## Logical Volume
+
+After creating a volume group, you can create logical volumes inside it.
+A logical volume may span multiple physical volumes but appears as a single, contiguous disk to the system.
+
+### Creating a Logical Volume
+
+To create a logical volume use the `lvcreate` command:
+
+```console
+lvcreate -n <lvname> -L <lvsize_in_M/G> <vgname>
+```
+
+### Display Logical Volumes
+
+To display logical volumes use:
+
+- `lvdisplay`
+- `lvs`
+- `lvscan`
+
+### Extending a Logical Volume
+
+To extend a logical volume use the `lvextend` command:
+
+```console
+lvextend -L [+/-]<size_to_be_inc/dec_number> <path_to_lv> -r
+```
+
+`-r` automatically resizes the filesystem (ext4, xfs, etc.).

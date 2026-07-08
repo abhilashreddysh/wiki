@@ -1,0 +1,72 @@
+---
+title: Hardware
+description: "Comprehensive overview of current homelab architecture, services, and recovery procedures."
+tags:
+  - infrastructure
+  - network
+  - inventory
+sidebar:
+    order: 2
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+<Aside type="tip" title="Important Note">
+    This document is intentionally **anonymized**: hostnames, IP ranges, exact OS versions, and specific product names are replaced with generic descriptors.
+</Aside>
+
+### Infrastructure
+
+```yaml
+physical_servers:
+  - name: Primary Node
+    specs: mid-range CPU / 24GB RAM / ~500GB storage
+    role: ["Primary Node", "VPN Gateway", "Hypervisor Host"]
+    os: Virtualization OS / Linux
+    backup: Secondary Node
+    uptime_policy: always-on
+
+  - name: Secondary Node
+    specs: low-mid CPU / 12GB RAM / ~1TB storage
+    role: ["Secondary Node", "Backup Target"]
+    os: Linux
+    backup: none
+    uptime_policy: standby
+
+vm:
+  - name: Docker Host A
+    specs: 4 cores / 6GB RAM / GPU passthrough
+    role: ["Primary Docker Host"]
+    services:
+      - Media Server
+      - Photo Backup
+
+  - name: Docker Host B
+    specs: 2 cores / 4GB RAM
+    role: ["Monitoring & Core Stack"]
+    services:
+      - Password Manager
+      - Reverse Proxy
+      - Dashboard / Metrics
+      - Automation Stack
+      - Torrent / Media Download
+
+lxc:
+  - name: VPN LXC
+    purpose: Encrypted remote gateway
+    host: Primary Node
+    resources: small
+    uptime_policy: always-on
+
+  - name: DNS LXC
+    purpose: Internal DNS / DHCP services
+    host: Primary Node
+    resources: small
+    uptime_policy: always-on
+
+  - name: CI LXC
+    purpose: CI/CD IaC
+    host: Primary Node
+    resources: small-to-medium
+    uptime_policy: on-demand
+```

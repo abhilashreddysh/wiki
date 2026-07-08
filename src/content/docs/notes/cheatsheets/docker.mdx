@@ -1,0 +1,125 @@
+---
+title: Understanding Docker
+description: Docker Concepts
+sidebar:
+    label: "Docker"
+---
+
+### What is Docker?
+
+- Platform for building, shipping, and running applications inside **containers**.
+- A container = lightweight runtime environment (like a mini VM but shares the host kernel).
+
+### Core Components
+
+- **Image:** Blueprint for containers (read-only).
+- **Container:** Running instance of an image.
+- **Dockerfile:** Instructions to build an image.
+- **Registry:** Repository to store and share images (Docker Hub, GHCR, private registry).
+- **Volumes:** Persistent storage for containers.
+- **Networks:** Allow containers to communicate.
+
+### Mental Model
+
+Dockerfile → Build Image → Run Container → Attach Volume/Network → Manage Lifecycle.
+
+---
+
+## Docker How-To
+---
+
+### Install & Verify
+
+- Install from [docker.com](https://docs.docker.com/get-docker/).
+- Check version: `docker --version`.
+
+### Working with Images
+
+- Pull image: `docker pull nginx:1.25`
+- List images: `docker images`
+- Build image: `docker build -t myapp:1.0 .`
+- Tag image: `docker tag myapp:1.0 myrepo/myapp:1.0`
+- Push image: `docker push myrepo/myapp:1.0`
+
+### Working with Containers
+
+- Run container: `docker run -d --name web -p 8080:80 nginx`
+- List running containers: `docker ps`
+- Start/stop container: `docker start web` / `docker stop web`
+- Exec into container: `docker exec -it web /bin/sh`
+- View logs: `docker logs -f web`
+
+### Volumes & Networks
+
+- Create volume: `docker volume create data`
+- Run with volume: `docker run -v data:/app/data ...`
+- Create network: `docker network create mynet`
+- Run with network: `docker run --network=mynet ...`
+
+### Dockerfile Basics
+
+```dockerfile
+FROM ubuntu:20.04
+RUN apt-get update && apt-get install -y curl
+COPY app/ /app
+WORKDIR /app
+CMD ["./start.sh"]
+```
+---
+
+## Docker Issues & Fixes
+---
+
+### Container exits immediately
+
+- Symptom: Run container, it stops right away.
+- Cause: Main process ended (e.g., CMD script finishes).
+- Fix: Use `docker run -it` for interactive, or ensure long-running process is in CMD.
+
+### Port binding not working
+
+- Symptom: Container is running, but service not reachable.
+- Causes:
+
+      - Forgot `-p host:container` mapping.
+      - Firewall blocking port.
+
+- Fix: Run with `docker run -p 8080:80 ...` and check firewall.
+
+### Image too large
+
+- Symptom: Built image is hundreds of MB.
+- Causes:
+
+      - Using heavy base image (e.g., `ubuntu`).
+      - Not cleaning up apt cache.
+
+- Fix: Use slim images (`alpine`, `debian-slim`).  
+  Example:
+  ```dockerfile
+  RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+  ```
+
+### Cannot connect to Docker daemon
+
+- Symptom: docker ps gives permission error.
+- Causes:
+
+      - Docker daemon not running.
+      - User not in docker group.
+
+- Fix:
+  ```bash
+  sudo systemctl start docker
+  sudo usermod -aG docker $USER
+  ```
+
+### Volume data missing after restart
+
+- Symptom: Data lost after container removed.
+- Cause: Used bind mount incorrectly or forgot named volume.
+- Fix: Use -v mydata:/path/in/container.
+
+## Reference
+
+- [Docker Docs](https://docs.docker.com/)

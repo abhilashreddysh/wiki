@@ -1,0 +1,64 @@
+---
+title: Linux Server Hardening
+description: Linux Server Hardening
+tags:
+  - linux
+  - setup
+---
+
+import { Tabs, TabItem, LinkButton } from "@astrojs/starlight/components";
+
+## Install security updates and patches
+
+Keeping your server updated is the first line of defense.
+
+<Tabs>
+<TabItem label="apt">
+Distros Applicable : `Debian/Ubuntu`
+Install latest Updates
+```shell
+sudo apt update && sudo apt upgrade -y
+```
+
+Enable automatic security updates:
+
+```shell
+sudo apt install unattended-upgrades
+sudo dpkg-reconfigure --priority=low unattended-upgrades
+```
+
+Remove unnecessary packages
+
+```shell
+sudo apt autoremove -y
+```
+
+</TabItem>
+<TabItem label="yum">
+Distros Applicable : `RHEL / CentOS / Oracle Linux`
+Install latest Updates
+```shell
+sudo yum update -y # Fedora
+sudo dnf update -y
+```
+
+    Remove unnecessary packages:
+
+```shell
+sudo yum autoremove -y
+```
+
+</TabItem>
+</Tabs>
+
+## Strong Passwords
+
+Use a strong password consists of a variety of characters (alphanumeric, numbers, special characters).
+
+<LinkButton
+  href="https://safepasswordgenerator.net/"
+  icon="external"
+  iconPlacement="end"
+>
+  Password Generator
+</LinkButton>

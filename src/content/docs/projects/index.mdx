@@ -1,0 +1,63 @@
+---
+title: Overview
+description: Personal projects, tools, and experiments.
+sidebar:
+  order: 1
+tableOfContents: false
+---
+
+import { Card, CardGrid, Badge, LinkButton } from "@astrojs/starlight/components";
+
+<Badge text="Always Building" />
+
+# Projects
+
+A collection of tools, automation, and infrastructure projects built trying to solve
+real problems, explore new technologies, and improve my homelab.
+
+---
+
+## Featured Projects
+
+<CardGrid>
+
+<Card title="Automation Scripts" icon="rocket">
+
+A collection of utilities that automate repetitive administration tasks,
+system maintenance, and everyday workflows.
+
+<LinkButton
+href="https://github.com/abhilashreddysh/AutomationScripts"
+icon="external" variant='minimal'>
+
+GitHub
+
+</LinkButton>
+
+</Card>
+
+<Card title="Homelab Infrastructure" icon="github">
+
+Infrastructure as Code for my homelab using Ansible, covering provisioning,
+configuration management, and service deployment.
+
+<LinkButton
+href="https://github.com/shabhilash/homelab-ansible"
+icon="external" variant='minimal'>
+
+GitHub
+
+</LinkButton>
+
+</Card>
+
+<Card title="Experimental Projects" icon="puzzle">
+
+Small tools, prototypes, and proof-of-concepts built while learning new
+technologies.
+
+</Card>
+
+</CardGrid>
+
+---
