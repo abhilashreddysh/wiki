@@ -1,0 +1,362 @@
+---
+title: Git - Multiple Accounts with SSH Commit Signing
+description: Configure Git to use multiple GitHub accounts with separate SSH authentication and SSH commit signing keys.
+---
+
+This guide configures Git to:
+
+- Use different GitHub accounts
+- Authenticate using SSH
+- Sign commits using SSH keys
+- Automatically switch identities based on repository location
+
+## Prerequisites
+
+Two GitHub accounts:
+
+- Personal
+- Work
+
+Two SSH key pairs:
+
+```text
+~/.ssh/id_ed25519
+~/.ssh/id_ed25519.pub
+
+~/.ssh/id_ed25519_work
+~/.ssh/id_ed25519_work.pub
+```
+
+> The **private key** is used for authentication.
+>
+> The **public key** is uploaded to GitHub and used for commit signing.
+
+---
+
+# Step 1 - Generate SSH Keys
+
+## Personal
+
+```bash
+ssh-keygen -t ed25519 \
+  -C "116741403+username@users.noreply.github.com" \
+  -f ~/.ssh/id_ed25519
+```
+
+## Work
+
+```bash
+ssh-keygen -t ed25519 \
+  -C "your.work@email.com" \
+  -f ~/.ssh/id_ed25519_work
+```
+
+---
+
+# Step 2 - Add Keys to the SSH Agent
+
+```bash
+eval "$(ssh-agent -s)"
+```
+
+```bash
+ssh-add ~/.ssh/id_ed25519
+ssh-add ~/.ssh/id_ed25519_work
+```
+
+Verify:
+
+```bash
+ssh-add -l
+```
+
+---
+
+# Step 3 - Configure SSH
+
+Create or edit:
+
+```sh
+vi ~/.ssh/config
+```
+
+```ssh
+Host github-personal
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519
+    IdentitiesOnly yes
+
+Host github-work
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519_work
+    IdentitiesOnly yes
+```
+
+---
+
+# Step 4 - Upload Keys to GitHub
+
+Authentication Keys
+
+Upload each **public key** to:
+
+Settings → SSH and GPG Keys → New SSH Key
+
+Commit Signing Keys
+
+Upload the same public keys again as:
+
+Settings → SSH and GPG Keys → New SSH Signing Key
+
+GitHub treats authentication and signing as separate registrations.
+
+---
+
+# Step 5 - Clone Repositories
+
+Personal
+
+```bash
+git clone git@github-personal:username/repository.git
+```
+
+Work
+
+```bash
+git clone git@github-work:company/repository.git
+```
+
+---
+
+# Step 6 - Configure Global Git
+
+```bash
+git config --global init.defaultBranch main
+git config --global gpg.format ssh
+git config --global commit.gpgsign true
+```
+
+---
+
+# Step 7 - Configure Repository Identity
+
+Inside a personal repository:
+
+```bash
+git config user.name "Abhilash Reddy"
+git config user.email "116741403+username@users.noreply.github.com"
+git config user.signingkey ~/.ssh/id_ed25519.pub
+```
+
+Inside a work repository:
+
+```bash
+git config user.name "Your Name"
+git config user.email "your.work@email.com"
+git config user.signingkey ~/.ssh/id_ed25519_work.pub
+```
+
+Verify:
+
+```bash
+git config --list
+```
+
+---
+
+# Step 8 - Automatic Configuration (Recommended)
+
+Instead of configuring every repository manually, use conditional Git configs.
+
+Directory layout:
+
+```text
+~/Projects/
+├── personal/
+└── work/
+```
+
+## Global config
+
+```ini title="~/.gitconfig"
+[includeIf "gitdir:~/Projects/personal/"]
+    path = ~/.gitconfig-personal
+
+[includeIf "gitdir:~/Projects/work/"]
+    path = ~/.gitconfig-work
+```
+
+```ini title="~/.gitconfig-personal"
+[user]
+    name = Abhilash Reddy
+    email = 116741403+username@users.noreply.github.com
+    signingkey = ~/.ssh/id_ed25519.pub
+
+[gpg]
+    format = ssh
+
+[commit]
+    gpgsign = true
+```
+
+```ini title="~/.gitconfig-work"
+[user]
+    name = Your Name
+    email = your.work@email.com
+    signingkey = ~/.ssh/id_ed25519_work.pub
+
+[gpg]
+    format = ssh
+
+[commit]
+    gpgsign = true
+```
+
+Git automatically switches identities based on the repository location.
+
+---
+
+# Step 9 - Verify SSH Authentication
+
+Personal:
+
+```bash
+ssh -T git@github-personal
+```
+
+Work:
+
+```bash
+ssh -T git@github-work
+```
+
+Expected output:
+
+```text
+Hi <username>! You've successfully authenticated...
+```
+
+---
+
+# Step 10 - Verify Commit Signing
+
+Create a commit:
+
+```bash
+git commit -m "Test commit"
+```
+
+Inspect the commit:
+
+```bash
+git log --show-signature -1
+```
+
+GitHub should display a **Verified** badge for the commit.
+
+---
+
+# Troubleshooting
+
+## Git Tries to Use GPG
+
+Error:
+
+```text
+gpg: signing failed: No secret key
+```
+
+Check:
+
+```bash
+git config --show-origin --get-regexp 'gpg|sign'
+```
+
+Ensure:
+
+```text
+gpg.format=ssh
+```
+
+and **not**
+
+```text
+gpg.format=openpgp
+```
+
+---
+
+## Verify Signing Key
+
+```bash
+git config user.signingkey
+```
+
+Should point to the **public** key:
+
+```text
+~/.ssh/id_ed25519.pub
+```
+
+Not:
+
+```text
+~/.ssh/id_ed25519
+```
+
+---
+
+## Verify Repository Configuration
+
+```bash
+git config --list
+```
+
+Check:
+
+```text
+user.name
+user.email
+user.signingkey
+gpg.format=ssh
+commit.gpgsign=true
+```
+
+---
+
+# Useful Commands
+
+List loaded SSH keys:
+
+```bash
+ssh-add -l
+```
+
+Show Git configuration origins:
+
+```bash
+git config --show-origin --list
+```
+
+Show signing configuration:
+
+```bash
+git config --show-origin --get-regexp 'gpg|sign'
+```
+
+Show current repository identity:
+
+```bash
+git config user.name
+git config user.email
+git config user.signingkey
+```
+
+Verify SSH connection:
+
+```bash
+ssh -T git@github-personal
+ssh -T git@github-work
+```
