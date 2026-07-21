@@ -3,7 +3,7 @@ name: Build and Push Image
 on:
   push:
     branches:
-      - main
+      - astro-docs
 
 env:
   REGISTRY: gitea.484154.xyz
@@ -39,12 +39,12 @@ jobs:
       - name: Build image
         run: |
           docker build \
-            -t $IMAGE:latest \
+            -t $IMAGE:dev \
             -t $IMAGE:$SHORT_SHA .
 
       - name: Push image
         run: |
-          docker push $IMAGE:latest
+          docker push $IMAGE:dev
           docker push $IMAGE:$SHORT_SHA
 
       - name: Cleanup Docker

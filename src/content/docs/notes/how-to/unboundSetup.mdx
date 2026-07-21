@@ -1,0 +1,995 @@
+---
+title: Unbound DNS
+description: Install and configure Unbound as a fast, secure, validating recursive DNS resolver on Alpine Linux.
+sidebar:
+  order: 20
+---
+
+# Unbound DNS
+
+> Unbound is a validating, recursive, and caching DNS resolver developed by **NLnet Labs**. It supports DNSSEC, caching, forwarding, recursive resolution, and is commonly used with AdGuard Home and Pi-hole.
+
+:::tip
+For most homelab deployments, use **AdGuard Home** for filtering and **Unbound** as the upstream resolver. This provides ad blocking while keeping your DNS resolution local and DNSSEC validated.
+:::
+
+---
+
+## Architecture
+
+### Forwarding Mode (Recommended for most users)
+
+```text
+Client
+   │
+   ▼
+AdGuard Home / Pi-hole
+   │
+   ▼
+Unbound
+   │
+   ▼
+Cloudflare / Quad9 / Google
+```
+
+Simple, fast and easy to maintain.
+
+---
+
+### Recursive Mode
+
+```text
+Client
+   │
+   ▼
+AdGuard Home / Pi-hole
+   │
+   ▼
+Unbound
+   │
+   ▼
+Root DNS
+   │
+   ▼
+TLD Servers
+   │
+   ▼
+Authoritative DNS
+```
+
+No third-party resolver is involved. Unbound performs the entire lookup itself.
+
+:::note
+Recursive mode offers greater privacy but may have slightly slower first-time lookups because responses are built from the DNS hierarchy before being cached.
+:::
+
+---
+
+# Installation
+
+Install Unbound using apk.
+
+```sh
+apk add unbound
+```
+
+Verify the installation.
+
+```sh
+unbound -V
+```
+
+Example output:
+
+```text
+Version 1.xx.x
+Linked libs:
+OpenSSL
+libevent
+```
+
+---
+
+# Configuration
+
+The configuration file is located at
+
+```text
+/etc/unbound/unbound.conf
+```
+
+Before modifying it, create a backup.
+
+```sh
+cp /etc/unbound/unbound.conf \
+   /etc/unbound/unbound.conf.bak
+```
+
+---
+
+# Basic Configuration
+
+The following configuration provides a minimal forwarding DNS resolver.
+
+```conf title="/etc/unbound/unbound.conf"
+server:
+    verbosity: 1
+
+    interface: 10.0.0.1
+    # interface: 0.0.0.0
+
+    do-ip4: yes
+    do-ip6: yes
+
+    do-udp: yes
+    do-tcp: yes
+
+    do-daemonize: yes
+
+    access-control: 0.0.0.0/0 allow
+
+    hide-identity: yes
+    hide-version: yes
+
+    use-syslog: yes
+
+python:
+
+remote-control:
+    control-enable: no
+
+forward-zone:
+    name: "."
+    forward-addr: 4.2.2.1
+    forward-addr: 4.2.2.4
+```
+
+---
+
+# Understanding the Configuration
+
+## interface
+
+Specifies which network interface Unbound listens on.
+
+```conf
+interface: 192.168.1.10
+```
+
+To listen on every interface:
+
+```conf
+interface: 0.0.0.0
+```
+
+:::warning
+Never expose Unbound directly to the Internet unless you fully understand the security implications.
+:::
+
+---
+
+## Access Control
+
+The example configuration allows every client.
+
+```conf
+access-control: 0.0.0.0/0 allow
+```
+
+A production configuration should instead allow only trusted networks.
+
+```conf
+access-control: 127.0.0.0/8 allow
+access-control: 192.168.1.0/24 allow
+access-control: 10.0.0.0/8 allow
+access-control: ::1 allow
+access-control: fd00::/8 allow
+```
+
+---
+
+## Logging
+
+Normal operation:
+
+```conf
+verbosity: 1
+```
+
+Debugging:
+
+```conf
+verbosity: 2
+```
+
+Very verbose:
+
+```conf
+verbosity: 4
+```
+
+:::tip
+Only increase logging temporarily while troubleshooting. DNS servers generate a surprising amount of logs once every smart TV, phone, and questionable IoT gadget starts asking where the internet lives.
+:::
+
+---
+
+# Recommended Production Configuration
+
+The following settings improve performance, cache efficiency, privacy, and security.
+
+```conf title="/etc/unbound/unbound.conf"
+server:
+
+    interface: 0.0.0.0
+
+    verbosity: 1
+
+    do-ip4: yes
+    do-ip6: yes
+    do-udp: yes
+    do-tcp: yes
+
+    hide-identity: yes
+    hide-version: yes
+
+    prefetch: yes
+    prefetch-key: yes
+
+    cache-min-ttl: 300
+    cache-max-ttl: 86400
+
+    serve-expired: yes
+    serve-expired-ttl: 86400
+
+    qname-minimisation: yes
+    minimal-responses: yes
+
+    harden-glue: yes
+    harden-dnssec-stripped: yes
+    harden-large-queries: yes
+    harden-short-bufsize: yes
+
+    edns-buffer-size: 1232
+
+    msg-cache-size: 32m
+    rrset-cache-size: 64m
+
+    num-threads: 4
+    so-reuseport: yes
+
+    access-control: 192.168.1.0/24 allow
+```
+
+---
+
+# Performance Tuning
+
+## Enable Prefetch
+
+```conf
+prefetch: yes
+prefetch-key: yes
+```
+
+Frequently requested records are refreshed before they expire.
+
+This improves response times significantly.
+
+---
+
+## Cache Size
+
+Default cache sizes are conservative.
+
+Increase them according to available RAM.
+
+| RAM | Message Cache | RRSet Cache |
+|------|---------------|-------------|
+|512 MB|16 MB|32 MB|
+|1 GB|32 MB|64 MB|
+|2 GB|64 MB|128 MB|
+|4 GB+|128 MB|256 MB|
+
+Example:
+
+```conf
+msg-cache-size: 64m
+rrset-cache-size: 128m
+```
+
+---
+
+## Multi-core CPUs
+
+Unbound scales very well across CPU cores.
+
+```conf
+num-threads: 4
+so-reuseport: yes
+```
+
+Recommended values:
+
+|CPU Cores|Threads|
+|---------:|------:|
+|1|1|
+|2|2|
+|4|4|
+|8|8|
+
+---
+
+## EDNS Buffer
+
+```conf
+edns-buffer-size: 1232
+```
+
+This avoids IP fragmentation and is recommended for modern networks.
+
+---
+
+# Security Hardening
+
+Enable the following options.
+
+```conf
+hide-identity: yes
+hide-version: yes
+
+qname-minimisation: yes
+minimal-responses: yes
+
+harden-glue: yes
+harden-dnssec-stripped: yes
+harden-large-queries: yes
+```
+
+|Option|Purpose|
+|-------|-------|
+|hide-identity|Hide hostname|
+|hide-version|Hide version string|
+|qname-minimisation|Improve privacy|
+|minimal-responses|Reduce unnecessary DNS data|
+|harden-glue|Reject malicious glue records|
+|harden-dnssec-stripped|Prevent DNSSEC downgrade attacks|
+
+:::tip
+These options have virtually no downside for modern networks and should generally be enabled.
+:::
+
+---
+
+# Forwarding Configuration
+
+Forward every request to upstream resolvers.
+
+## Cloudflare
+
+```conf
+forward-zone:
+    name: "."
+    forward-addr: 1.1.1.1
+    forward-addr: 1.0.0.1
+```
+
+---
+
+## Quad9
+
+```conf
+forward-zone:
+    name: "."
+    forward-addr: 9.9.9.9
+    forward-addr: 149.112.112.112
+```
+
+---
+
+## Google
+
+```conf
+forward-zone:
+    name: "."
+    forward-addr: 8.8.8.8
+    forward-addr: 8.8.4.4
+```
+
+:::caution
+Forwarding bypasses recursive resolution. DNSSEC validation can still work, but your upstream resolver will see every query.
+:::
+
+---
+
+---
+
+# Recursive Resolution (Root Hints)
+
+Instead of forwarding queries to an upstream DNS provider such as Cloudflare or Quad9, Unbound can perform **full recursive resolution** by querying the Internet's root DNS servers directly.
+
+```text
+Client
+   │
+   ▼
+Unbound
+   │
+   ▼
+Root Servers
+   │
+   ▼
+TLD Servers (.com, .org, .net)
+   │
+   ▼
+Authoritative Name Server
+```
+
+:::tip
+Running in recursive mode means no public DNS provider sees every query your network makes.
+:::
+
+:::note
+The first lookup for a domain may take slightly longer because Unbound has to walk the DNS hierarchy. Subsequent lookups are served from cache.
+:::
+
+---
+
+## Download Root Hints
+
+Download the latest list of root DNS servers.
+
+```sh
+wget https://www.internic.net/domain/named.cache \
+    -O /etc/unbound/root.hints
+```
+
+---
+
+## Enable Root Hints
+
+Comment out any existing `forward-zone` blocks.
+
+```conf
+#forward-zone:
+#    name: "."
+#    forward-addr: 1.1.1.1
+```
+
+Then add the following to the `server` section.
+
+```conf
+root-hints: "/etc/unbound/root.hints"
+```
+
+---
+
+## Keep Root Hints Updated
+
+The list of root servers changes very rarely, but updating it occasionally is considered good practice.
+
+Example cron job:
+
+```cron
+0 3 1 * * wget -q \
+https://www.internic.net/domain/named.cache \
+-O /etc/unbound/root.hints && \
+rc-service unbound restart
+```
+
+:::tip
+Updating the root hints once every month is more than sufficient.
+:::
+
+---
+
+# DNSSEC
+
+DNSSEC protects clients from forged DNS responses by cryptographically validating DNS records.
+
+Without DNSSEC:
+
+```text
+Client
+   │
+   ▼
+Fake DNS Response
+```
+
+With DNSSEC:
+
+```text
+Client
+   │
+   ▼
+Signature Validation
+   │
+   ├── Valid ✓
+   └── Invalid ✗
+```
+
+---
+
+## Initialize Trust Anchor
+
+Run:
+
+```sh
+unbound-anchor \
+    -a /var/lib/unbound/root.key
+```
+
+---
+
+## Enable Validation
+
+```conf
+auto-trust-anchor-file: "/var/lib/unbound/root.key"
+```
+
+---
+
+## Verify DNSSEC
+
+Query a signed domain.
+
+```sh
+dig dnssec.works
+```
+
+Check validation.
+
+```sh
+dig sigok.verteiltesysteme.net
+```
+
+Broken DNSSEC should fail.
+
+```sh
+dig sigfail.verteiltesysteme.net
+```
+
+:::tip
+If the last query succeeds, DNSSEC validation is not working correctly.
+:::
+
+---
+
+# Local DNS Records
+
+Unbound can act as an authoritative DNS server for your local network.
+
+Example:
+
+```conf
+local-zone: "home.arpa." static
+
+local-data: "router.home.arpa. IN A 192.168.1.1"
+
+local-data: "nas.home.arpa. IN A 192.168.1.10"
+
+local-data: "proxmox.home.arpa. IN A 192.168.1.20"
+
+local-data: "grafana.home.arpa. IN A 192.168.1.30"
+```
+
+---
+
+## IPv6 Records
+
+```conf
+local-data: "server.home.arpa. IN AAAA fd00::10"
+```
+
+---
+
+## Reverse Lookups
+
+```conf
+local-data-ptr: "192.168.1.10 nas.home.arpa."
+```
+
+Now:
+
+```sh
+dig -x 192.168.1.10
+```
+
+returns
+
+```text
+nas.home.arpa
+```
+
+---
+
+# Private Networks
+
+Prevent accidental leakage of private IP addresses.
+
+```conf
+private-address: 10.0.0.0/8
+private-address: 172.16.0.0/12
+private-address: 192.168.0.0/16
+private-address: 169.254.0.0/16
+
+private-address: fd00::/8
+private-address: fe80::/10
+```
+
+---
+
+## Private Domains
+
+```conf
+private-domain: "home.arpa"
+```
+
+:::tip
+Avoid using `.local`.
+
+Modern operating systems reserve `.local` for mDNS (Bonjour/Avahi). The recommended private domain is **home.arpa** (RFC 8375).
+:::
+
+---
+
+# 0x20 Bit Encoding
+
+The **0x20 Bit** is an experimental anti-spoofing technique.
+
+Example request:
+
+```text
+www.Google.Com
+```
+
+The authoritative server should respond with the exact same capitalization.
+
+If the capitalization changes unexpectedly, the response can be rejected.
+
+Enable it with:
+
+```conf
+use-caps-for-id: yes
+```
+
+:::warning
+A very small number of legacy authoritative DNS servers may not support this feature correctly.
+:::
+
+---
+
+# Remote Control
+
+Remote management is disabled by default.
+
+```conf
+remote-control:
+    control-enable: no
+```
+
+To enable:
+
+```conf
+remote-control:
+    control-enable: yes
+```
+
+Generate certificates.
+
+```sh
+unbound-control-setup
+```
+
+Reload configuration.
+
+```sh
+unbound-control reload
+```
+
+Show statistics.
+
+```sh
+unbound-control stats_noreset
+```
+
+---
+
+# Service Management
+
+Validate configuration.
+
+```sh
+unbound-checkconf
+```
+
+Enable during boot.
+
+```sh
+rc-update add unbound default
+```
+
+Start service.
+
+```sh
+rc-service unbound start
+```
+
+Restart.
+
+```sh
+rc-service unbound restart
+```
+
+Stop.
+
+```sh
+rc-service unbound stop
+```
+
+---
+
+# Testing
+
+## nslookup
+
+```sh
+nslookup google.com 192.168.1.10
+```
+
+---
+
+## dig
+
+```sh
+dig github.com @192.168.1.10
+```
+
+---
+
+## drill
+
+```sh
+drill github.com @192.168.1.10
+```
+
+---
+
+## Verify Cache
+
+Run twice.
+
+```sh
+dig github.com @192.168.1.10
+```
+
+The second query should have a much lower query time.
+
+---
+
+## Query Local Records
+
+```sh
+dig nas.home.arpa
+```
+
+---
+
+# Monitoring
+
+Useful commands.
+
+Show statistics.
+
+```sh
+unbound-control stats_noreset
+```
+
+Memory usage.
+
+```sh
+unbound-control stats | grep memory
+```
+
+Cache statistics.
+
+```sh
+unbound-control stats | grep cache
+```
+
+Hit ratio.
+
+```sh
+unbound-control stats | grep hit
+```
+
+---
+
+# Troubleshooting
+
+## Check Configuration
+
+```sh
+unbound-checkconf
+```
+
+---
+
+## View Logs
+
+```sh
+logread
+```
+
+or
+
+```sh
+journalctl -u unbound
+```
+
+---
+
+## Port Already in Use
+
+```sh
+ss -lntup | grep 53
+```
+
+Common culprits include:
+
+- AdGuard Home
+- Pi-hole
+- dnsmasq
+- systemd-resolved
+
+---
+
+## DNSSEC Failures
+
+Verify:
+
+```sh
+ls -l /var/lib/unbound/root.key
+```
+
+Reinitialize.
+
+```sh
+unbound-anchor \
+-a /var/lib/unbound/root.key
+```
+
+---
+
+## Test Network Connectivity
+
+```sh
+dig @1.1.1.1 google.com
+```
+
+If this fails, the issue is likely outside Unbound.
+
+---
+
+# Frequently Asked Questions
+
+## Should I use Forwarding or Recursive Mode?
+
+| Forwarding | Recursive |
+|------------|-----------|
+| Faster first lookup | Better privacy |
+| Easier setup | More independent |
+| Relies on upstream resolver | Queries root servers directly |
+
+---
+
+## Should I enable IPv6?
+
+Yes, if your network supports IPv6.
+
+Otherwise:
+
+```conf
+do-ip6: no
+```
+
+---
+
+## Should I increase cache size?
+
+Yes.
+
+If your server has more than 1 GB RAM, increasing cache sizes generally improves performance.
+
+---
+
+## Should I enable DNSSEC?
+
+Absolutely.
+
+DNSSEC is one of Unbound's strongest features and should almost always be enabled.
+
+---
+
+# Example Production Configuration
+
+Below is a solid baseline for most homelab deployments.
+
+```conf title="/etc/unbound/unbound.conf"
+server:
+
+    interface: 0.0.0.0
+
+    verbosity: 1
+
+    do-ip4: yes
+    do-ip6: yes
+
+    do-udp: yes
+    do-tcp: yes
+
+    prefetch: yes
+    prefetch-key: yes
+
+    serve-expired: yes
+
+    cache-min-ttl: 300
+    cache-max-ttl: 86400
+
+    qname-minimisation: yes
+    minimal-responses: yes
+
+    harden-glue: yes
+    harden-dnssec-stripped: yes
+    harden-large-queries: yes
+    harden-short-bufsize: yes
+
+    edns-buffer-size: 1232
+
+    hide-identity: yes
+    hide-version: yes
+
+    msg-cache-size: 64m
+    rrset-cache-size: 128m
+
+    num-threads: 4
+    so-reuseport: yes
+
+    private-address: 10.0.0.0/8
+    private-address: 172.16.0.0/12
+    private-address: 192.168.0.0/16
+
+    access-control: 192.168.1.0/24 allow
+
+    auto-trust-anchor-file: "/var/lib/unbound/root.key"
+
+    root-hints: "/etc/unbound/root.hints"
+```
+
+:::tip
+This configuration is a good starting point for a homelab or small office. Adjust the number of threads, cache sizes, and access controls to suit your hardware and network.
+:::
+
+---
+
+# References
+
+- [Official Unbound Documentation](https://unbound.docs.nlnetlabs.nl/en/latest/)
+- [Unbound Configuration Manual](https://nlnetlabs.nl/documentation/unbound/unbound.conf/)
+- [InterNIC Root Hints](https://www.internic.net/domain/named.cache)
+- [RFC 8375 - home.arpa](https://datatracker.ietf.org/doc/html/rfc8375)
+- [DNSSEC Guide](https://www.icann.org/resources/pages/dnssec-what-is-it-why-important-2019-03-05-en)
+- [RFC 4033 DNS Security Introduction](https://datatracker.ietf.org/doc/html/rfc4033)
+- [Setting up unbound DNS server - Alpine Linux](https://wiki.alpinelinux.org/wiki/Setting_up_unbound_DNS_server)
+
+---
+
+# See Also
+
+- AdGuard Home
+- Pi-hole
+- DNS over TLS (DoT)
+- DNS over HTTPS (DoH)
+- Knot Resolver
+- CoreDNS
+- BIND9
+- PowerDNS
