@@ -1,0 +1,319 @@
+---
+title: Managing Services with OpenRC
+description: Learn how to start, stop, enable, and manage services on Alpine Linux using OpenRC.
+sidebar:
+  order: 10
+---
+
+# Managing Services with OpenRC
+
+Alpine Linux uses **OpenRC** as its init system instead of `systemd`. OpenRC is lightweight, dependency-aware, and designed to manage system services efficiently.
+
+This guide explains how to start, stop, and configure services to automatically start when the system boots.
+
+---
+
+## Check Service Status
+
+View the current status of a service.
+
+```sh
+rc-service <service> status
+```
+
+Example:
+
+```sh
+rc-service unbound status
+```
+
+---
+
+## Start a Service
+
+Start a service immediately.
+
+```sh
+rc-service <service> start
+```
+
+Example:
+
+```sh
+rc-service nginx start
+```
+
+---
+
+## Stop a Service
+
+Stop a running service.
+
+```sh
+rc-service <service> stop
+```
+
+Example:
+
+```sh
+rc-service nginx stop
+```
+
+---
+
+## Restart a Service
+
+Restart a service after making configuration changes.
+
+```sh
+rc-service <service> restart
+```
+
+Example:
+
+```sh
+rc-service nginx restart
+```
+
+---
+
+## Reload a Service
+
+Some services support reloading their configuration without a full restart.
+
+```sh
+rc-service <service> reload
+```
+
+Example:
+
+```sh
+rc-service unbound reload
+```
+
+:::note
+Not all services support the `reload` command. If unsupported, restart the service instead.
+:::
+
+---
+
+# Enable a Service at Boot
+
+To automatically start a service during system startup, add it to a runlevel.
+
+```sh
+rc-update add <service> default
+```
+
+Example:
+
+```sh
+rc-update add unbound default
+```
+
+Verify the service has been added:
+
+```sh
+rc-update show
+```
+
+Example output:
+
+```text
+default
+ ├── networking
+ ├── crond
+ ├── sshd
+ ├── unbound
+```
+
+:::tip
+The `default` runlevel is used for most system services and is the recommended choice for nearly all applications.
+:::
+
+---
+
+# Disable a Service at Boot
+
+Remove a service from automatic startup.
+
+```sh
+rc-update del <service> default
+```
+
+Example:
+
+```sh
+rc-update del unbound default
+```
+
+---
+
+# View Enabled Services
+
+Display all configured services and their runlevels.
+
+```sh
+rc-update show
+```
+
+To see only the services enabled for the `default` runlevel:
+
+```sh
+rc-update show default
+```
+
+---
+
+# List Available Services
+
+Display all installed OpenRC services.
+
+```sh
+rc-status -a
+```
+
+To list only currently running services:
+
+```sh
+rc-status
+```
+
+---
+
+# Available Runlevels
+
+OpenRC organizes services into **runlevels**, which define when services are started.
+
+| Runlevel | Purpose |
+|----------|---------|
+| `boot` | Essential services required during early system startup |
+| `sysinit` | System initialization tasks |
+| `default` | Standard services for normal operation |
+| `shutdown` | Services executed during shutdown |
+| `nonetwork` | Minimal environment without networking |
+
+For most services, use the `default` runlevel.
+
+---
+
+# Verify Startup Configuration
+
+To confirm a service is configured to start automatically:
+
+```sh
+rc-update show | grep unbound
+```
+
+Expected output:
+
+```text
+unbound | default
+```
+
+---
+
+# Example Workflow
+
+Install a service:
+
+```sh
+apk add unbound
+```
+
+Enable it at boot:
+
+```sh
+rc-update add unbound default
+```
+
+Start it immediately:
+
+```sh
+rc-service unbound start
+```
+
+Verify its status:
+
+```sh
+rc-service unbound status
+```
+
+---
+
+# Troubleshooting
+
+## Service Does Not Start
+
+Check the service status:
+
+```sh
+rc-service <service> status
+```
+
+Review system logs:
+
+```sh
+logread
+```
+
+If the service provides a configuration validator, run it before restarting. For example:
+
+```sh
+unbound-checkconf
+```
+
+---
+
+## Service Is Not Starting After Reboot
+
+Verify it is enabled:
+
+```sh
+rc-update show
+```
+
+If it is missing, add it again:
+
+```sh
+rc-update add <service> default
+```
+
+---
+
+## Service Fails to Restart
+
+Restart manually to view any errors:
+
+```sh
+rc-service <service> restart
+```
+
+Then inspect the logs for additional details.
+
+---
+
+# Summary
+
+| Action | Command |
+|---------|---------|
+| Start a service | `rc-service <service> start` |
+| Stop a service | `rc-service <service> stop` |
+| Restart a service | `rc-service <service> restart` |
+| Reload a service | `rc-service <service> reload` |
+| Check status | `rc-service <service> status` |
+| Enable at boot | `rc-update add <service> default` |
+| Disable at boot | `rc-update del <service> default` |
+| Show enabled services | `rc-update show` |
+| Show running services | `rc-status` |
+
+:::tip
+A common pattern after installing a new service is:
+
+```sh
+rc-update add <service> default
+rc-service <service> start
+```
+
+This starts the service immediately and ensures it will automatically start after future reboots.
+:::
