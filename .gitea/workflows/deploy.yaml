@@ -48,7 +48,7 @@ jobs:
 
       - name: Push image
         run: |
-          docker push $IMAGE:dev
+          docker push $IMAGE:$IMAGE_TAG
 
       - name: Cleanup Docker
         if: always()
