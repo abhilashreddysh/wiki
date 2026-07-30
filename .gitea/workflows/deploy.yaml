@@ -42,7 +42,7 @@ jobs:
 
       - name: Build image
         run: |
-          docker build \
+          docker build . \
             -t $IMAGE:$IMAGE_TAG
 
 
