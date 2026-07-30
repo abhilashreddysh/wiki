@@ -2,8 +2,6 @@ name: Build and Push Image
 
 on:
   push:
-    branches:
-      - astro-docs
 
 env:
   REGISTRY: gitea.484154.xyz
@@ -32,20 +30,25 @@ jobs:
           username: ${{ gitea.actor }}
           password: ${{ secrets.REGISTRY_TOKEN }}
       
-      - name: Set variables
+      - name: Set environment variables
         run: |
           echo "SHORT_SHA=$(echo '${{ github.sha }}' | cut -c1-7)" >> "$GITHUB_ENV"
           
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            echo "IMAGE_TAG=latest" >> "$GITHUB_ENV"
+          else
+            echo "IMAGE_TAG=dev" >> "$GITHUB_ENV"
+          fi
+
       - name: Build image
         run: |
-          docker build \
-            -t $IMAGE:dev \
-            -t $IMAGE:$SHORT_SHA .
+          docker build . \
+            -t $IMAGE:$IMAGE_TAG
+
 
       - name: Push image
         run: |
           docker push $IMAGE:dev
-          docker push $IMAGE:$SHORT_SHA
 
       - name: Cleanup Docker
         if: always()
