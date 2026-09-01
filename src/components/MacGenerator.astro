@@ -1,0 +1,453 @@
+```astro
+---
+const hypervisors = {
+  "01": "nexus",
+  "02": "nexusmini",
+};
+---
+
+<div class="mac-generator">
+  <!-- Controls -->
+  <div class="controls">
+    <label>
+      <span>Hypervisor</span>
+
+      <select id="mac-hypervisor">
+        {Object.entries(hypervisors).map(([id, name]) => (
+          <option value={id}>{id} · {name}</option>
+        ))}
+      </select>
+    </label>
+
+    <label class="vm-field">
+      <span>VM</span>
+
+      <input
+        id="mac-vm"
+        value="01"
+        maxlength="2"
+        inputmode="numeric"
+        autocomplete="off"
+      />
+    </label>
+  </div>
+
+  <!-- MAC Address -->
+  <div class="mac-display">
+    <div class="mac-info">
+      <code id="mac-result">52:4E:45:58:01:01</code>
+
+      <span id="mac-identity">
+        nexus · VM 01
+      </span>
+    </div>
+
+    <button id="mac-copy" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M9 5h-2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2" />
+        <rect x="9" y="3" width="10" height="14" rx="2" />
+      </svg>
+
+      <span>Copy</span>
+    </button>
+  </div>
+
+  <!-- Terraform -->
+  <div class="terraform"> 
+    <div class="terraform-content"> 
+      <span class="terraform-label">Terraform</span> 
+      <code id="terraform-result"> 
+        mac_address = "52:4E:45:58:01:01" 
+      </code> 
+    </div> 
+    <button id="terraform-copy" type="button"> 
+      <svg viewBox="0 0 24 24" aria-hidden="true"> <path d="M9 5h-2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2" /> <rect x="9" y="3" width="10" height="14" rx="2" /> </svg> 
+      <span>Copy</span> 
+    </button> 
+  </div>
+  
+  <!-- Format -->
+  <div class="format">
+    <code>
+      52:4E:45:58:<b>XX</b>:<b>YY</b>
+    </code>
+
+    <span>XX = hypervisor · YY = VM</span>
+  </div>
+</div>
+
+<style>
+  /* ============================================================
+     Container
+     ============================================================ */
+
+  .mac-generator {
+    margin: 1.5rem 0;
+    padding: 1rem;
+
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.7rem;
+
+    background: var(--sl-color-gray-7);
+  }
+
+  /* ============================================================
+     Typography
+     ============================================================ */
+
+  label > span,
+  .mac-info span,
+  .format,
+  .terraform > div > span {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--sl-color-gray-3);
+  }
+
+  select,
+  input,
+  button {
+    font-size: 0.85rem;
+    line-height: 1.2;
+  }
+
+  .mac-info code {
+    font-size: 1rem;
+    line-height: 1.4;
+    letter-spacing: 0.04em;
+  }
+
+  .terraform code {
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+
+  .format code {
+    font-size: 0.75rem;
+  }
+
+  /* ============================================================
+     Controls
+     ============================================================ */
+
+  .controls {
+    display: flex;
+    align-items: end;
+    gap: 0.75rem;
+  }
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  select,
+  input {
+    height: 2.35rem;
+    box-sizing: border-box;
+
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.4rem;
+
+    background: var(--sl-color-black);
+    color: var(--sl-color-white);
+
+    font-family: var(--sl-font-mono);
+  }
+
+  select {
+    width: 9rem;
+    padding: 0 0.65rem;
+  }
+
+  input {
+    width: 3.5rem;
+    padding: 0 0.5rem;
+    text-align: center;
+  }
+
+  select:focus,
+  input:focus {
+    outline: 2px solid var(--sl-color-accent);
+    outline-offset: 1px;
+  }
+
+  /* ============================================================
+     MAC Display
+     ============================================================ */
+
+  .mac-display {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    margin-top: 0.85rem;
+    padding: 0.75rem 0.85rem;
+
+    border-radius: 0.5rem;
+    background: var(--sl-color-black);
+  }
+
+  .mac-info {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .mac-info code {
+    overflow: hidden;
+
+    color: var(--sl-color-white);
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  /* ============================================================
+     Buttons
+     ============================================================ */
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+
+    flex-shrink: 0;
+
+    height: 2.1rem;
+    padding: 0 0.7rem;
+
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.4rem;
+
+    background: transparent;
+    color: var(--sl-color-gray-2);
+
+    cursor: pointer;
+  }
+
+  button:hover {
+    color: var(--sl-color-white);
+    border-color: var(--sl-color-gray-3);
+  }
+
+  button:focus-visible {
+    outline: 2px solid var(--sl-color-accent);
+    outline-offset: 2px;
+  }
+
+  button svg {
+    width: 0.85rem;
+    height: 0.85rem;
+
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+  }
+
+  /* ============================================================
+     Terraform
+     ============================================================ */
+
+  .terraform { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    gap: 1rem; 
+    margin-top: 0.5rem; 
+    padding: 0.55rem 0.7rem; 
+    border: 1px solid var(--sl-color-gray-6); 
+    border-radius: 0.4rem; 
+    } 
+  .terraform-content { 
+    min-width: 0; 
+    display: flex; 
+    align-items: center; 
+    gap: 0.75rem; 
+  } 
+  .terraform-label { 
+    flex-shrink: 0; f
+    ont-size: 0.75rem; 
+    font-weight: 600; 
+    color: var(--sl-color-gray-3); 
+  } 
+  .terraform code { 
+    overflow: hidden; 
+    font-size: 0.8rem; 
+    line-height: 1.4; 
+    white-space: nowrap; 
+    text-overflow: ellipsis; 
+  }
+
+  /* ============================================================
+     Format
+     ============================================================ */
+
+  .format {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    margin-top: 0.55rem;
+  }
+
+  .format b {
+    color: var(--sl-color-accent);
+  }
+
+  /* ============================================================
+     Responsive
+     ============================================================ */
+
+  @media (max-width: 500px) {
+    .controls {
+      width: 100%;
+    }
+
+    .controls label:first-child {
+      flex: 1;
+    }
+
+    select {
+      width: 100%;
+    }
+
+    .vm-field {
+      width: 3.5rem;
+    }
+
+    .mac-display,
+    .terraform {
+      align-items: flex-start;
+    }
+
+    button span {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const hypervisor =
+    document.querySelector<HTMLSelectElement>("#mac-hypervisor");
+
+  const vm =
+    document.querySelector<HTMLInputElement>("#mac-vm");
+
+  const result =
+    document.querySelector<HTMLElement>("#mac-result");
+
+  const identity =
+    document.querySelector<HTMLElement>("#mac-identity");
+
+  const terraform =
+    document.querySelector<HTMLElement>("#terraform-result");
+
+  const macCopy =
+    document.querySelector<HTMLButtonElement>("#mac-copy");
+
+  const terraformCopy =
+    document.querySelector<HTMLButtonElement>("#terraform-copy");
+
+  const hypervisorNames: Record<string, string> = {
+    "01": "nexus",
+    "02": "nexusmini",
+  };
+
+  function normalize(value: string) {
+    return value
+      .replace(/[^0-9a-f]/gi, "")
+      .slice(0, 2)
+      .toUpperCase();
+  }
+
+  function update() {
+    const host = normalize(hypervisor?.value ?? "01");
+    const id = normalize(vm?.value ?? "01");
+
+    if (host.length !== 2 || id.length !== 2) {
+      result!.textContent = "52:4E:45:58:XX:YY";
+
+      identity!.textContent =
+        "Invalid VM identifier";
+
+      terraform!.textContent =
+        'mac_address = "52:4E:45:58:XX:YY"';
+
+      return;
+    }
+
+    const mac =
+      `52:4E:45:58:${host}:${id}`;
+
+    const hostName =
+      hypervisorNames[host] ??
+      `Hypervisor ${host}`;
+
+    result!.textContent = mac;
+
+    identity!.textContent =
+      `${hostName} · VM ${id}`;
+
+    terraform!.textContent =
+      `mac_address = "${mac}"`;
+  }
+
+  function setupCopy(
+    button: HTMLButtonElement | null,
+    getValue: () => string
+  ) {
+    button?.addEventListener("click", async () => {
+      const value = getValue();
+
+      if (!value || value.includes("XX")) {
+        return;
+      }
+
+      await navigator.clipboard.writeText(value);
+
+      const text =
+        button.querySelector("span");
+
+      if (!text) {
+        return;
+      }
+
+      const original =
+        text.textContent;
+
+      text.textContent = "Copied";
+
+      setTimeout(() => {
+        text.textContent = original;
+      }, 1200);
+    });
+  }
+
+  hypervisor?.addEventListener(
+    "change",
+    update
+  );
+
+  vm?.addEventListener(
+    "input",
+    update
+  );
+
+  setupCopy(
+    macCopy,
+    () => result?.textContent ?? ""
+  );
+
+  setupCopy(
+    terraformCopy,
+    () => terraform?.textContent ?? ""
+  );
+
+  update();
+</script>
