@@ -15,6 +15,8 @@ FROM nginx:1.29-alpine
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 
+RUN chown -R 101:101 /var/cache/nginx
+
 USER 101:101
 
 HEALTHCHECK --interval=5m \
