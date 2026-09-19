@@ -1,0 +1,29 @@
+---
+title: Hardware
+description: "Comprehensive overview of current homelab architecture, services, and recovery procedures."
+tags:
+  - infrastructure
+  - network
+  - inventory
+sidebar:
+    order: 2
+tableOfContents: false
+---
+
+```yaml
+physical_servers:
+  - name: Primary Node
+    specs: mid-range CPU / 24GB RAM / ~500GB storage
+    role: ["PVE", "Hypervisor Host"]
+    os: Virtualization OS / Linux
+    backup: Secondary Node
+    uptime_policy: always-on
+
+  - name: Secondary Node
+    specs: low-mid CPU / 12GB RAM / ~1TB storage
+    role: ["Standby Node", "Backup Storage"]
+    os: Linux
+    backup: none
+    uptime_policy: standby
+
+```
