@@ -13,9 +13,9 @@ RUN npm run build
 # Stage 2: Serve with Nginx
 FROM nginx:1.29-alpine
 
-COPY --from=builder /app/dist /usr/share/nginx/html
+RUN touch /run/nginx.pid && chown -R 101:101 /var/cache/nginx /run/nginx.pid
 
-RUN chown -R 101:101 /var/cache/nginx
+COPY --from=builder /app/dist /usr/share/nginx/html
 
 USER 101:101
 
