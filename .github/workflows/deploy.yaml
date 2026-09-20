@@ -9,7 +9,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: sh-ubuntu
 
     steps:
       - uses: actions/checkout@v7
@@ -27,7 +27,7 @@ jobs:
         uses: docker/login-action@v4
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ gitea.actor }}
+          username: ${{ github.actor }}
           password: ${{ secrets.REGISTRY_TOKEN }}
       
       - name: Set environment variables

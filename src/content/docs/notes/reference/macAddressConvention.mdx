@@ -1,0 +1,168 @@
+---
+title: MAC Address Convention
+description: Virtual Machine MAC Address Convention
+tags: [linux, vm, mac]
+---
+
+import MacGenerator from "../../../../components/MacGenerator.astro";
+
+
+All virtual machines in the homelab use **locally administered unicast MAC addresses** with a common `NEX` identifier.
+
+Physical hardware keeps its original manufacturer-assigned MAC address.
+
+## Format
+
+```text
+52:4E:45:58:XX:YY
+             │  │
+             │  └── VM identifier
+             └───── Physical hypervisor
+```
+
+| Part       | Meaning                          |
+| ---------- | -------------------------------- |
+| `52`       | Locally administered, unicast    |
+| `4E:45:58` | ASCII `NEX`                      |
+| `XX`       | Physical hypervisor identifier   |
+| `YY`       | VM identifier on that hypervisor |
+
+`4E:45:58` is hexadecimal ASCII for `NEX`, making virtual machines immediately recognizable in DHCP leases, Proxmox, and network troubleshooting.
+
+## Hypervisor Allocation
+
+Each physical Proxmox host receives a unique `XX` identifier.
+
+| `XX` | Hypervisor        |
+| ---- | ----------------- |
+| `01` | `nexus`           |
+| `02` | `nexusmini`       |
+| `03` | Future hypervisor |
+| `04` | Future hypervisor |
+
+The `XX` value represents the **physical host**, not the VM's role.
+
+## VM Allocation
+
+`YY` identifies the VM on its physical hypervisor.
+
+For example, on `nexus`:
+
+```text
+52:4E:45:58:01:01  talos-cp01
+52:4E:45:58:01:02  talos-worker01
+52:4E:45:58:01:03  openbao
+52:4E:45:58:01:04  postgres
+```
+
+On `nexusmini`:
+
+```text
+52:4E:45:58:02:01  talos-cp02
+52:4E:45:58:02:02  talos-worker02
+52:4E:45:58:02:03  monitoring
+```
+
+This means:
+
+```text
+52:4E:45:58:01:03
+             │  │
+             │  └── VM #03
+             └───── nexus
+```
+
+## Important: VM Migration
+
+Because `XX` represents the physical hypervisor, **moving a VM to another hypervisor requires changing its MAC address** if the convention is strictly maintained.
+
+For example:
+
+```text
+Before:
+52:4E:45:58:01:04
+nexus / postgres
+
+After migration to nexusmini:
+52:4E:45:58:02:04
+nexusmini / postgres
+```
+
+The `YY` value can remain the same because it identifies the VM, while `XX` changes with its physical host.
+
+If preserving DHCP reservations across migrations is more important than encoding the current host in the MAC, keep the original MAC instead.
+
+## Terraform
+
+```hcl
+network_device {
+  bridge      = var.network_bridge
+  mac_address = var.mac_address
+}
+```
+
+Example:
+
+```hcl
+mac_address = "52:4E:45:58:01:03"
+```
+
+## Physical Hardware
+
+Physical devices **do not use this convention**.
+
+```text
+Physical hardware → Manufacturer MAC
+Virtual machines  → 52:4E:45:58:XX:YY
+```
+
+This makes physical and virtual devices immediately distinguishable.
+
+## DHCP
+
+Virtual machines use fixed DHCP reservations based on their MAC address.
+
+```text
+52:4E:45:58:01:01 → 192.168.1.50
+52:4E:45:58:01:02 → 192.168.1.51
+52:4E:45:58:02:01 → 192.168.1.60
+```
+
+## Rules
+
+1. Use `52:4E:45:58:XX:YY` for homelab VMs.
+2. `XX` identifies the physical hypervisor.
+3. `YY` identifies the VM.
+4. Do not modify MAC addresses of physical hardware.
+5. Never assign the same `XX:YY` combination to two VMs on the same hypervisor.
+6. Keep MAC addresses stable unless the VM is intentionally moved and the convention requires `XX` to change.
+7. Maintain the hypervisor allocation table as new physical hosts are added.
+
+### Summary
+
+```text
+Physical hardware
+    └── Manufacturer MAC
+
+Virtual infrastructure
+    └── 52:4E:45:58:XX:YY
+                 │  │
+                 │  └── VM
+                 └───── Hypervisor
+```
+
+Example:
+
+```text
+52:4E:45:58:01:04
+          └──┬──┘
+            NEX
+             │
+             ├── 01 = nexus
+             └── 04 = VM #04
+```
+
+
+## MAC Address Generator
+
+<MacGenerator />

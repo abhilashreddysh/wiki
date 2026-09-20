@@ -13,7 +13,14 @@ RUN npm run build
 # Stage 2: Serve with Nginx
 FROM nginx:1.29-alpine
 
+RUN touch /run/nginx.pid && chown -R 101:101 /var/cache/nginx /run/nginx.pid
+
 COPY --from=builder /app/dist /usr/share/nginx/html
+
+USER 101:101
+
+HEALTHCHECK --interval=5m \
+  CMD curl -f http://localhost/ || exit 1
 
 EXPOSE 80
 
