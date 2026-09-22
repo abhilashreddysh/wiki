@@ -1,0 +1,234 @@
+---
+interface ConfigField {
+  key: string;
+  label: string;
+  value: string;
+  placeholder?: string;
+}
+
+interface Props {
+  fields: ConfigField[];
+}
+
+const { fields } = Astro.props;
+---
+
+<details>
+  <summary>Configure environment</summary>
+
+  <div class="config-fields" data-interactive-config>
+    {
+      fields.map((field) => (
+        <label>
+          <span>{field.label}</span>
+
+          <input
+            type="text"
+            data-field={field.key}
+            value={field.value}
+            placeholder={field.placeholder}
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </label>
+      ))
+    }
+
+    <button type="button" data-reset>
+      Reset
+    </button>
+  </div>
+</details>
+
+<script>
+  document
+    .querySelectorAll<HTMLElement>(
+      "[data-interactive-config]"
+    )
+    .forEach((container) => {
+      const inputs =
+        container.querySelectorAll<HTMLInputElement>(
+          "[data-field]"
+        );
+
+      const reset =
+        container.querySelector<HTMLButtonElement>(
+          "[data-reset]"
+        );
+
+      const storageKey =
+        `interactive-config:${window.location.pathname}`;
+
+      interface CodeBlock {
+        originalNodes: Text[];
+        originalValues: string[];
+      }
+
+      const codeBlocks: CodeBlock[] = [];
+
+      /*
+       * Keep Starlight/Shiki's existing syntax highlighting.
+       * Only modify the text nodes containing placeholders.
+       */
+      document
+        .querySelectorAll<HTMLElement>("pre code")
+        .forEach((code) => {
+          const walker =
+            document.createTreeWalker(
+              code,
+              NodeFilter.SHOW_TEXT
+            );
+
+          const nodes: Text[] = [];
+
+          let node: Node | null;
+
+          while ((node = walker.nextNode())) {
+            nodes.push(node as Text);
+          }
+
+          codeBlocks.push({
+            originalNodes: nodes,
+            originalValues: nodes.map(
+              (node) => node.nodeValue ?? ""
+            )
+          });
+        });
+
+      function getValues(): Record<string, string> {
+        const values: Record<string, string> = {};
+
+        inputs.forEach((input) => {
+          const key = input.dataset.field;
+
+          if (key) {
+            values[key] = input.value;
+          }
+        });
+
+        return values;
+      }
+
+      function replacePlaceholders(
+        text: string,
+        values: Record<string, string>
+      ) {
+        let result = text;
+
+        Object.entries(values).forEach(
+          ([key, value]) => {
+            result = result.replaceAll(
+              `{{${key}}}`,
+              value
+            );
+          }
+        );
+
+        return result;
+      }
+
+      function updateCommands() {
+        const values = getValues();
+
+        codeBlocks.forEach(
+          ({ originalNodes, originalValues }) => {
+            originalNodes.forEach(
+              (node, index) => {
+                node.nodeValue =
+                  replacePlaceholders(
+                    originalValues[index],
+                    values
+                  );
+              }
+            );
+          }
+        );
+
+        localStorage.setItem(
+          storageKey,
+          JSON.stringify(values)
+        );
+      }
+
+      function resetValues() {
+        inputs.forEach((input) => {
+          input.value = input.defaultValue;
+        });
+
+        localStorage.removeItem(storageKey);
+
+        updateCommands();
+      }
+
+      const saved =
+        localStorage.getItem(storageKey);
+
+      if (saved) {
+        try {
+          const values =
+            JSON.parse(saved) as Record<string, string>;
+
+          inputs.forEach((input) => {
+            const key = input.dataset.field;
+
+            if (
+              key &&
+              Object.prototype.hasOwnProperty.call(
+                values,
+                key
+              )
+            ) {
+              input.value = values[key];
+            }
+          });
+        } catch {
+          localStorage.removeItem(storageKey);
+        }
+      }
+
+      inputs.forEach((input) => {
+        input.addEventListener(
+          "input",
+          updateCommands
+        );
+      });
+
+      reset?.addEventListener(
+        "click",
+        resetValues
+      );
+
+      updateCommands();
+    });
+</script>
+
+<style>
+  .config-fields input {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 0.45rem 0.55rem;
+
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.3rem;
+
+    background: var(--sl-color-bg);
+    color: var(--sl-color-text);
+
+    font: inherit;
+    font-family: var(--__sl-font-mono);
+    font-size: 0.85rem;
+  }
+
+  .config-fields button {
+    border: 1px solid var(--sl-color-gray-6);
+    border-radius: 0.3rem;
+    padding: 0.15rem 0.35rem;
+  }
+
+  @media (max-width: 600px) {
+    .config-fields {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,242 @@
+---
+title: OpenBao
+description: Restore an OpenBao Raft snapshot to a fresh installation.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import InteractiveConfig from '../../../../components/InteractiveConfig.astro';
+
+# Restore OpenBao from a Raft Snapshot
+
+Procedure to restore OpenBao from a **Raft snapshot** on a fresh installation.
+
+<Aside type="caution" title="Before you start">
+
+You need:
+
+* A fresh OpenBao installation using Raft storage
+* The Raft snapshot
+* The **original cluster's unseal keys**
+* Access to the OpenBao server
+
+The fresh cluster will be initialized temporarily. Its generated keys and root token are discarded when the snapshot is restored.
+
+</Aside>
+
+<InteractiveConfig
+  fields={[
+    {
+      key: "BAO_HOST",
+      label: "Host",
+      value: "IP_ADDR"
+    },
+    {
+      key: "BAO_PORT",
+      label: "Port",
+      value: "8200"
+    },
+    {
+      key: "SNAPSHOT",
+      label: "Snapshot",
+      value: "./openbao-YYYY-MM-DD_HH-MM-SS.snap"
+    }
+  ]}
+/>
+
+## 1. Point the CLI to OpenBao
+
+```bash
+export BAO_ADDR=http://{{BAO_HOST}}:{{BAO_PORT}}
+```
+
+Verify the fresh instance:
+
+```bash
+bao status
+```
+
+Expected:
+
+```text
+Initialized        false
+Sealed             true
+Storage Type       raft
+```
+
+---
+
+## 2. Initialize the Fresh Cluster
+
+Initialize OpenBao:
+
+```bash
+bao operator init
+```
+
+**Save the generated unseal keys and root token temporarily.**
+
+These credentials are only used to bring the fresh cluster online.
+
+---
+
+## 3. Unseal
+
+Use the **newly generated** unseal keys:
+
+```bash
+bao operator unseal
+```
+
+Repeat until OpenBao is unsealed.
+
+Verify:
+
+```bash
+bao status
+```
+
+Expected:
+
+```text
+Initialized        true
+Sealed             false
+```
+
+---
+
+## 4. Authenticate
+
+Login using the **new temporary root token**:
+
+```bash
+bao login
+```
+
+Verify:
+
+```bash
+bao token lookup
+```
+
+---
+
+## 5. Restore the Snapshot
+
+Restore the backup:
+
+```bash
+bao operator raft snapshot restore -force \
+  {{SNAPSHOT}}
+```
+
+<Aside type="note" title="Why -force?">
+
+The fresh cluster has different Shamir keys from the original cluster.
+
+`-force` allows the snapshot to replace the temporary cluster despite this mismatch.
+
+</Aside>
+
+Wait for the restore to complete before continuing.
+
+---
+
+## 6. Unseal Using the Original Keys
+
+After the restore, use the **original cluster's unseal keys**:
+
+```bash
+bao operator unseal
+```
+
+Repeat until OpenBao is unsealed.
+
+Verify:
+
+```bash
+bao status
+```
+
+Expected:
+
+```text
+Initialized        true
+Sealed             false
+Storage Type       raft
+```
+
+<Aside type="caution" title="Important">
+
+Do not use the temporary unseal keys from step 2.
+
+The snapshot has restored the original cluster state, including its seal configuration.
+
+</Aside>
+
+---
+
+## 7. Verify the Restore
+
+Check the Raft cluster:
+
+```bash
+bao operator raft list-peers
+```
+
+Check secrets engines:
+
+```bash
+bao secrets list
+```
+
+Check authentication methods:
+
+```bash
+bao auth list
+```
+
+Check policies:
+
+```bash
+bao policy list
+```
+
+For a known KV secret:
+
+```bash
+bao kv get homelab/test
+```
+
+---
+
+## Recovery Flow
+
+```text
+Fresh OpenBao
+     │
+     ▼
+Initialize
+     │
+     ▼
+Unseal with NEW keys
+     │
+     ▼
+Login with NEW root token
+     │
+     ▼
+Restore snapshot
+     │
+     ▼
+Unseal with ORIGINAL keys
+     │
+     ▼
+Verify
+```
+
+<Aside type="tip" title="Test your backups">
+
+A backup is only useful if it can be restored.
+
+Periodically test the restore procedure on a disposable OpenBao instance.
+
+</Aside>
