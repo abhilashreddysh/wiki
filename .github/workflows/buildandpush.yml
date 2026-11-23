@@ -5,7 +5,7 @@ on:
 
 env:
   REGISTRY: gitea.484154.xyz
-  IMAGE: gitea.484154.xyz/nexus/${{ github.repository }}
+  IMAGE: gitea.484154.xyz/nexus/wiki
 
 jobs:
   build:
